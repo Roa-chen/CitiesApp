@@ -12,6 +12,9 @@ import {
 import CenterMessage from "../components/CenterMessage";
 import { colors } from "../theme";
 import Context from "../../Context";
+
+import Icon from 'react-native-vector-icons/AntDesign'
+
 export default class Cities extends React.Component {
 
   static navigationOptions =

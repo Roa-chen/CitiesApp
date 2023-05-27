@@ -4,9 +4,11 @@ import Cities from './Cities/Cities';
 import City from './Cities/City';
 import AddCity from './AddCity/AddCity';
 
-import {colors} from './theme';
-import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { colors } from './theme';
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
+
+import Icon from 'react-native-vector-icons/AntDesign';
 
 const options = {
   navigationOptions: {
@@ -17,15 +19,21 @@ const options = {
   },
 };
 
-const Stack = createNativeStackNavigator()
+const Stack = createStackNavigator()
 
 const CitiesNav = (props) => {
   return (
-    <Stack.Navigator screenOptions={{headerStyle: {backgroundColor: colors.primary}, headerTitleStyle: {
-      color: 'white',
-      fontWeight: '400',
-      fontSize: 20
-    }}}>
+    <Stack.Navigator screenOptions={{
+      headerStyle: {backgroundColor: colors.primary}, 
+      headerTitleStyle: {
+        color: 'white',
+        fontWeight: '400',
+        fontSize: 20
+      },
+      gestureEnabled: true,
+      gestureDirection: 'vertical',
+      cardStyleInterpolator: CardStyleInterpolators.forModalPresentationIOS,
+    }}>
       <Stack.Screen 
         name="Cities" 
         component={Cities} 
@@ -45,11 +53,16 @@ const Tab = createBottomTabNavigator();
 const Tabs = props => {
   return (
     <Tab.Navigator 
-      screenOptions={{ tabBarIcon: () => null, headerShown: false}} >
-      <Tab.Screen name="CitiesContainer" component={CitiesNav} />
-      <Tab.Screen name="AddCity" component={AddCity} />
+      screenOptions={{headerShown: false}} >
+      <Tab.Screen name="Cities List" component={CitiesNav} options={{
+        tabBarIcon: (state) => <Icon name={"home"} size={30} color={state.focused ? colors.primary : '#666'} />}} />
+      <Tab.Screen name="AddCity" component={AddCity} options={{
+        tabBarIcon: (state) => <Icon name={"plus"} size={30} color={state.focused ? colors.primary : '#666'} />}} />
     </Tab.Navigator>
   )
 }
 
 export default Tabs;
+
+
+//home-search

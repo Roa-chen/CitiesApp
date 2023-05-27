@@ -11,6 +11,7 @@ import 'react-native-get-random-values'
 import { v4 as uuidV4 } from 'uuid';
 import { colors } from '../theme';
 import Context from "../../Context";
+import LinearGradient from 'react-native-linear-gradient';
 
 export default class AddCity extends React.Component {
 
@@ -62,11 +63,13 @@ export default class AddCity extends React.Component {
           style={styles.input}
           value={this.state.country}
         />
-        <TouchableOpacity onPress={this.submit}>
-          <View style={styles.button}>
-            <Text style={styles.buttonText}>Add City</Text>
-          </View>
-        </TouchableOpacity>
+        <LinearGradient colors={['#333', '#777']} style={styles.button} start={{x: 0, y: 0}} end={{x: 1, y: 1}}>
+          <TouchableOpacity onPress={this.submit}>
+            {/* <View style={styles.button}> */}
+              <Text style={styles.buttonText}>Add City</Text>
+            {/* </View> */}
+          </TouchableOpacity>
+        </LinearGradient>
       </View>
     )
   }
