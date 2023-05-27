@@ -63,13 +63,11 @@ export default class AddCity extends React.Component {
           style={styles.input}
           value={this.state.country}
         />
-        <LinearGradient colors={['#333', '#777']} style={styles.button} start={{x: 0, y: 0}} end={{x: 1, y: 1}}>
-          <TouchableOpacity onPress={this.submit}>
-            {/* <View style={styles.button}> */}
+        <TouchableOpacity onPress={this.submit}>
+          <LinearGradient colors={['#333', '#777']} style={styles.button} start={{x: 0, y: 0}} end={{x: 1, y: 1}}>
               <Text style={styles.buttonText}>Add City</Text>
-            {/* </View> */}
-          </TouchableOpacity>
-        </LinearGradient>
+          </LinearGradient>
+        </TouchableOpacity>
       </View>
     )
   }

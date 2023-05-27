@@ -13,6 +13,7 @@ import {
 import CenterMessage from "../components/CenterMessage";
 import { colors } from "../theme";
 import Context from "../../Context";
+import { Colors } from "react-native/Libraries/NewAppScreen";
 
 
 export default class City extends React.Component {
@@ -73,21 +74,22 @@ export default class City extends React.Component {
             }
           </View>
         </ScrollView>
-
-        <TextInput
-          onChangeText={val => this.onChangeText('name', val)}
-          placeholder="Location name"
-          value={this.state.name}
-          style={styles.input}
-          placeholderTextColor={'white'} />
-        <TextInput
-          onChangeText={val => this.onChangeText('info', val)}
-          placeholder="Location info"
-          value={this.state.info}
-          style={styles.input}
-          placeholderTextColor={'white'} />
-        <View style={styles.buttonContainer} >
-          <TouchableOpacity onPress={this.addLocations}>
+        <View style={styles.actionBarContainer}>
+          <View style={styles.inputContainer}>
+            <TextInput
+              onChangeText={val => this.onChangeText('name', val)}
+              placeholder="Location name"
+              value={this.state.name}
+              style={[styles.input, styles.input1]}
+              placeholderTextColor={'white'} />
+            <TextInput
+              onChangeText={val => this.onChangeText('info', val)}
+              placeholder="Location info"
+              value={this.state.info}
+              style={[styles.input, styles.input2]}
+              placeholderTextColor={'white'} />
+          </View>
+          <TouchableOpacity onPress={this.addLocations} >
             <View style={styles.button}>
               <Text style={styles.buttonText}>Add Location</Text>
             </View>
@@ -99,29 +101,40 @@ export default class City extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  input: {
-    height: 50,
-    backgroundColor: colors.primaryTransparent,
-    color: 'white',
-    paddingHorizontal: 8,
-    marginBottom: 4,
-    marginHorizontal: 4,
-    borderWidth: 2,
-    borderColor: colors.primary,
-    borderRadius: 25,
+  actionBarContainer: {
+    padding: 10,
+    bottom: 80,
+    flexDirection: 'row',
+    height: 100,
   },
-  buttonContainer: {
-    bottom: 0,
-    left: 0,
+  inputContainer: {
+    flexDirection: 'column',
+    flex: 1,
+    justifyContent: "space-between",
   },
   button: {
-    height: 50,
     backgroundColor: colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 6,
     borderRadius: 5,
-    marginHorizontal: 4
+    marginLeft: 4,
+    width: 80,
+    height: 80,
+    borderTopEndRadius: 15,
+    borderBottomEndRadius: 15,
+  },
+  input: {
+    height: 38,
+    padding: 7,
+    borderRadius: 5,
+    backgroundColor: colors.primaryTransparent,
+    color: 'white',
+  },
+  input1: {
+    borderTopLeftRadius: 15,
+  },
+  input2: {
+    borderBottomLeftRadius: 15,
   },
   buttonText: {
     color: 'white'

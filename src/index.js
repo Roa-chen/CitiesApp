@@ -1,5 +1,7 @@
 import React from 'react';
 
+import {View, TouchableOpacity} from 'react-native';
+
 import Cities from './Cities/Cities';
 import City from './Cities/City';
 import AddCity from './AddCity/AddCity';
@@ -50,14 +52,35 @@ const CitiesNav = (props) => {
 
 const Tab = createBottomTabNavigator();
 
+const TabButton = (props) => {
+
+  const {name, onPress, accessibilityState} = props;
+  const {selected} = accessibilityState;
+
+  return (
+    <TouchableOpacity onPress={onPress} style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <Icon name={name} size={30} color={selected ? colors.primary : '#666'} />
+    </TouchableOpacity>
+  )
+}
+
 const Tabs = props => {
   return (
     <Tab.Navigator 
-      screenOptions={{headerShown: false}} >
+      screenOptions={{
+        headerShown: false,
+        tabBarShowLabel: false,
+        tabBarStyle: {
+          height: 60,
+          borderRadius: 20,
+          margin: 10,
+          position: 'absolute'
+        },
+      }} >
       <Tab.Screen name="Cities List" component={CitiesNav} options={{
-        tabBarIcon: (state) => <Icon name={"home"} size={30} color={state.focused ? colors.primary : '#666'} />}} />
+          tabBarButton: (props) => <TabButton {...props} name="home" /> }} />
       <Tab.Screen name="AddCity" component={AddCity} options={{
-        tabBarIcon: (state) => <Icon name={"plus"} size={30} color={state.focused ? colors.primary : '#666'} />}} />
+          tabBarButton: (props) => <TabButton {...props} name="plus" /> }} />
     </Tab.Navigator>
   )
 }
