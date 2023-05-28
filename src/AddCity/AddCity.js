@@ -14,7 +14,6 @@ import { colors } from '../theme';
 import Context from "../../Context";
 import LinearGradient from 'react-native-linear-gradient';
 import Geolocation from 'react-native-geolocation-service';
-import { GestureObjects } from 'react-native-gesture-handler/lib/typescript/handlers/gestures/gestureObjects';
 
 export default class AddCity extends React.Component {
 
@@ -50,19 +49,20 @@ export default class AddCity extends React.Component {
   getCoordinates = async () => {
 
     const isGranted = await PermissionsAndroid.check('android.permission.ACCESS_FINE_LOCATION');
-    console.log(isGranted)
     
     if (!isGranted) {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
       )
+      console.log('granted: ', granted);
+
       if (granted !== 'granted' && granted !== 'restricted') return
     }
     
     return new Promise((resolve, reject) => {
       Geolocation.getCurrentPosition(
-        position => resolve(position.coords),
-        err => reject(err), 
+        (position) => resolve(position.coords),
+        (err) => reject(err), 
         {enableHighAccuracy: true, timeout: 10000, maximumAge: 10000}
       );
     })
