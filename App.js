@@ -33,17 +33,14 @@ export default class App extends Component {
     cities.push(city);
     this.setState({ cities });
     AsyncStorage.setItem(key, JSON.stringify(cities))
-      .then(() => console.log('storage updated'))
       .catch(e => console.log('error : ', e))
   }
 
   delCity = (city) => {
-    console.log('delete ', city)
     let cities = this.state.cities;
     cities = cities.filter((item) => (item.id !== city.id));
     this.setState({cities});
     AsyncStorage.setItem(key, JSON.stringify(cities))
-      .then(() => console.log('storage updated'))
       .catch(e => console.log('error : ', e))
   }
 
@@ -60,7 +57,6 @@ export default class App extends Component {
     ]
     this.setState({ cities })
     AsyncStorage.setItem(key, JSON.stringify(cities))
-      .then(() => console.log('storage updated'))
       .catch(e => console.log('error : ', e))
   }
 
@@ -69,7 +65,6 @@ export default class App extends Component {
       return item.id === city.id;
     })
     const chosenCity = this.state.cities[index];
-    console.log("chosenCity : ", chosenCity)
     chosenCity.locations = chosenCity.locations.filter(item => item !== location)
     const cities = [
       ...this.state.cities.slice(0, index),
@@ -78,7 +73,6 @@ export default class App extends Component {
     ]
     this.setState({ cities })
     AsyncStorage.setItem(key, JSON.stringify(cities))
-      .then(() => console.log('storage updated'))
       .catch(e => console.log('error : ', e))
   }
   

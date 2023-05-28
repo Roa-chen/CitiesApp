@@ -30,14 +30,11 @@ export default class Cities extends React.Component {
   static contextType = Context;
 
   navigate = (item) => {
-    console.log('navigate to : ' + item.city)
     this.props.navigation.navigate('City', { city: item });
   }
 
   render() {
-    console.log('context : ', this.context)
     const { cities } = this.context;
-    // console.log(cities)
 
     return (
       <ScrollView contentContainerStyle={[!cities.length && { flex: 1 }]}>
