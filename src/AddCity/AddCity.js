@@ -6,6 +6,8 @@ import {
   TextInput,
   TouchableOpacity,
   PermissionsAndroid,
+  ToastAndroid,
+  Platform,
 } from 'react-native';
 
 import 'react-native-get-random-values'
@@ -82,14 +84,41 @@ export default class AddCity extends React.Component {
   };
 
   getLocation = async () => {
-    const coordinates = await this.getCoordinates();
+    let coordinates;
+    try {
+      coordinates = await this.getCoordinates();
+    } catch (error) {
+      console.log('error: ', error);
+      if (Platform.OS === "android") {
+        ToastAndroid.show('Error while getting coordinates', ToastAndroid.SHORT)
+      }
+    }
     console.log("coord", coordinates)
-    const data = await this.getCityFromCoordinates(coordinates.latitude, coordinates.longitude)
 
-    const cityName = data.address.city;
+    let data;
+    try {
+      data = await this.getCityFromCoordinates(coordinates.latitude, coordinates.longitude)
+    } catch (error) {
+      console.log('error: ', error);
+      if (Platform.OS === "android") {
+        ToastAndroid.show('Error while getting place from coordinates', ToastAndroid.SHORT)
+      }
+    }
+
+    console.log(data)
+
+    let cityName;
+    const scale = ["hamlet", "village", "town", "city"]
+    for (let index in scale) {
+      if (data.address[scale[index]]) {
+        cityName = data.address[scale[index]];
+        break;
+      }
+    }
+
     const countryName = data.address.country;
-    this.setState({city: cityName, country: countryName})
 
+    this.setState({city: cityName, country: countryName})
   }
 
   render() {

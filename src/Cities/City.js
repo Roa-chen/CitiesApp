@@ -8,12 +8,14 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
+  Share,
 } from "react-native";
 
 import CenterMessage from "../components/CenterMessage";
 import { colors } from "../theme";
 import Context from "../../Context";
 import { Colors } from "react-native/Libraries/NewAppScreen";
+import Icon from 'react-native-vector-icons/AntDesign';
 
 
 export default class City extends React.Component {
@@ -43,7 +45,25 @@ export default class City extends React.Component {
     this.setState({ name: '', info: '' })
   }
 
+  share = async (location) => {
+    const { city } = this.props.route.params;
+
+    try {
+      const response = await Share.share({message: `Hey, I have visited "${location.name}" in ${city.city}, ${city.country}.`, title: 'message title'})
+    } catch(error) {
+      console.log('error : ', error);
+    }
+  }
+
   static contextType = Context;
+
+  ButtonIcon = ({name, onPress}) => (
+    <TouchableWithoutFeedback onPress={onPress}>
+      <View style={{padding: 10}}>
+        <Icon name={name} size={30} color={colors.primary} /> 
+      </View>
+    </TouchableWithoutFeedback>
+  )
 
   render() {
     const { city } = this.props.route.params;
@@ -62,13 +82,10 @@ export default class City extends React.Component {
                     <Text style={styles.locationName}>{location.name}</Text>
                     <Text style={styles.locationInfo}>{location.info}</Text>
                   </View>
-                  <View style={{ alignSelf: 'center' }}>
-                      <TouchableWithoutFeedback onPress={() => this.context.delLocation(location, city)}>
-                        <View style={{padding: 10}}>
-                          <Image source={require("./cancel-button.png")} style={styles.image} />
-                        </View>
-                      </TouchableWithoutFeedback>
-                    </View>
+                  <View style={{ alignSelf: 'center', flexDirection: 'row' }}>
+                    <this.ButtonIcon name="sharealt" onPress={() => this.share(location)} />
+                    <this.ButtonIcon name="delete" onPress={() => this.context.delLocation(location, city)} />
+                  </View>
                 </View>
               ))
             }
