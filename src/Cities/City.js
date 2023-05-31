@@ -78,7 +78,7 @@ export default class City extends React.Component {
             {
               city.locations.map((location, index) => (
                 <View style={styles.locationContainer} key={index}>
-                  <View style={{width: '70%', backgroundColor: 'pink'}}>
+                  <View style={{width: '70%'}}>
                     <Text numberOfLines={1} style={styles.locationName}>{location.name}</Text>
                     <Text style={styles.locationInfo}>{location.info}</Text>
                   </View>

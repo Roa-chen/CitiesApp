@@ -45,8 +45,8 @@ export default class Cities extends React.Component {
               <View style={styles.cityContainer} key={index}>
                 <TouchableWithoutFeedback onPress={() => (this.navigate(item))} >
                   <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', }}>
-                    <View>
-                      <Text style={styles.city}>{item.city}</Text>
+                    <View style={{width: '80%'}}>
+                      <Text numberOfLines={1} style={styles.city}>{item.city}</Text>
                       <Text style={styles.country}>{item.country}</Text>
                     </View>
                     <View style={{ alignSelf: 'center' }}>
@@ -79,7 +79,8 @@ styles = StyleSheet.create({
     color: 'black'
   },
   country: {
-    color: "rgba(0, 0, 0, .5)"
+    color: "rgba(0, 0, 0, .5)",
+    maxWidth: '90%',
   },
   image: {
     width: 20,
