@@ -78,8 +78,8 @@ export default class City extends React.Component {
             {
               city.locations.map((location, index) => (
                 <View style={styles.locationContainer} key={index}>
-                  <View>
-                    <Text style={styles.locationName}>{location.name}</Text>
+                  <View style={{width: '70%', backgroundColor: 'pink'}}>
+                    <Text numberOfLines={1} style={styles.locationName}>{location.name}</Text>
                     <Text style={styles.locationInfo}>{location.info}</Text>
                   </View>
                   <View style={{ alignSelf: 'center', flexDirection: 'row' }}>
@@ -166,10 +166,11 @@ const styles = StyleSheet.create({
   },
   locationName: {
     fontSize: 20,
-    color: 'black'
+    color: 'black',
   },
   locationInfo: {
-    color: 'rgba(0, 0, 0, .5)'
+    color: 'rgba(0, 0, 0, .5)',
+    maxWidth: '90%',
   },
   image: {
     width: 20,
