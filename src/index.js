@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
-import {View, TouchableOpacity} from 'react-native';
+import {View, TouchableOpacity, Animated} from 'react-native';
 
 import Cities from './Cities/Cities';
 import City from './Cities/City';
@@ -56,10 +56,20 @@ const TabButton = (props) => {
 
   const {name, onPress, accessibilityState} = props;
   const {selected} = accessibilityState;
+  const scaleValue = useRef(new Animated.Value(selected ? 1 : 0))
+
+  useEffect(() => {
+    Animated.timing(scaleValue.current, {
+      toValue: selected ? 1 : 0,
+      duration: 200,
+      useNativeDriver: true
+    }).start()
+  }, [selected])
 
   return (
-    <TouchableOpacity onPress={onPress} style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Icon name={name} size={30} color={selected ? colors.primary : '#666'} />
+    <TouchableOpacity onPress={onPress} style={{flex: 1, justifyContent: 'center', alignItems: 'center'}} >
+      <Icon name={name} style={{paddingBottom: 5}} size={30} color={selected ? colors.primary : '#666'} />
+      <Animated.View style={{alignSelf: 'center', width: '10%', height: 6, backgroundColor: colors.primary, borderRadius: 3, backgroundColor: selected ? colors.primary : '#666', transform: [{scale: scaleValue.current}]}} />
     </TouchableOpacity>
   )
 }
@@ -86,6 +96,3 @@ const Tabs = props => {
 }
 
 export default Tabs;
-
-
-//home-search
