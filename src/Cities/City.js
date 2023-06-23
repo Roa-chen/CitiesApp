@@ -13,20 +13,19 @@ import {
 
 import CenterMessage from "../components/CenterMessage";
 import { colors } from "../theme";
-import Context from "../../Context";
-import { Colors } from "react-native/Libraries/NewAppScreen";
 import Icon from 'react-native-vector-icons/AntDesign';
+import { connect } from "react-redux";
+import { addLocation, delLocation } from "../reducers/CitiesSlice";
 
-
-export default class City extends React.Component {
+class City extends React.Component {
 
   componentDidMount() {
     this.props.navigation.setOptions({ title: this.props.route.params.city.city });
   }
 
   state = {
-    name: '',
-    info: ''
+    name: 'testtest',
+    info: 'testtest'
   }
 
   onChangeText = (key, value) => {
@@ -41,7 +40,7 @@ export default class City extends React.Component {
       name: this.state.name,
       info: this.state.info
     }
-    this.context.addLocation(location, city);
+    this.props.addLocation({location, city});
     this.setState({ name: '', info: '' })
   }
 
@@ -49,18 +48,16 @@ export default class City extends React.Component {
     const { city } = this.props.route.params;
 
     try {
-      const response = await Share.share({message: `Hey, I have visited "${location.name}" in ${city.city}, ${city.country}.`, title: 'message title'})
-    } catch(error) {
+      const response = await Share.share({ message: `Hey, I have visited "${location.name}" in ${city.city}, ${city.country}.`, title: 'message title' })
+    } catch (error) {
       console.log('error : ', error);
     }
   }
 
-  static contextType = Context;
-
-  ButtonIcon = ({name, onPress}) => (
+  ButtonIcon = ({ name, onPress }) => (
     <TouchableWithoutFeedback onPress={onPress}>
-      <View style={{padding: 10}}>
-        <Icon name={name} size={30} color={colors.primary} /> 
+      <View style={{ padding: 10 }}>
+        <Icon name={name} size={30} color={colors.primary} />
       </View>
     </TouchableWithoutFeedback>
   )
@@ -78,13 +75,13 @@ export default class City extends React.Component {
             {
               city.locations.map((location, index) => (
                 <View style={styles.locationContainer} key={index}>
-                  <View style={{width: '70%'}}>
+                  <View style={{ width: '70%' }}>
                     <Text numberOfLines={1} style={styles.locationName}>{location.name}</Text>
                     <Text style={styles.locationInfo}>{location.info}</Text>
                   </View>
                   <View style={{ alignSelf: 'center', flexDirection: 'row' }}>
                     <this.ButtonIcon name="sharealt" onPress={() => this.share(location)} />
-                    <this.ButtonIcon name="delete" onPress={() => this.context.delLocation(location, city)} />
+                    <this.ButtonIcon name="delete" onPress={() => this.props.delLocation({location, city})} />
                   </View>
                 </View>
               ))
@@ -116,6 +113,13 @@ export default class City extends React.Component {
     )
   }
 }
+
+const mapDispatchToProps = (dispatch) => ({
+  addLocation: (payload) => dispatch(addLocation(payload)),
+  delLocation: (payload) => dispatch(delLocation(payload)) 
+}) 
+
+export default connect(null, mapDispatchToProps)(City)
 
 const styles = StyleSheet.create({
   actionBarContainer: {

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import {
   View,
   Text,
@@ -11,11 +11,10 @@ import {
 
 import CenterMessage from "../components/CenterMessage";
 import { colors } from "../theme";
-import Context from "../../Context";
+import { delCity } from "../reducers/CitiesSlice";
+import { connect } from 'react-redux'
 
-import Icon from 'react-native-vector-icons/AntDesign'
-
-export default class Cities extends React.Component {
+class Cities extends React.Component {
 
   static navigationOptions =
     {
@@ -27,14 +26,15 @@ export default class Cities extends React.Component {
       }
     }
 
-  static contextType = Context;
-
   navigate = (item) => {
     this.props.navigation.navigate('City', { city: item });
+    console.log("navigate")
   }
 
   render() {
-    const { cities } = this.context;
+
+    const {cities} = this.props.cities;
+    console.log('rerender')
 
     return (
       <ScrollView contentContainerStyle={[!cities.length && { flex: 1 }]}>
@@ -45,13 +45,13 @@ export default class Cities extends React.Component {
               <View style={styles.cityContainer} key={index}>
                 <TouchableWithoutFeedback onPress={() => (this.navigate(item))} >
                   <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', }}>
-                    <View style={{width: '80%'}}>
+                    <View style={{ width: '80%' }}>
                       <Text numberOfLines={1} style={styles.city}>{item.city}</Text>
                       <Text style={styles.country}>{item.country}</Text>
                     </View>
                     <View style={{ alignSelf: 'center' }}>
-                      <TouchableWithoutFeedback onPress={() => this.context.delCity(item)}>
-                        <View style={{padding: 10}}>
+                      <TouchableWithoutFeedback onPress={() => this.props.delCity(item)}>
+                        <View style={{ padding: 10 }}>
                           <Image source={require("./cancel-button.png")} style={styles.image} />
                         </View>
                       </TouchableWithoutFeedback>
@@ -66,6 +66,16 @@ export default class Cities extends React.Component {
     );
   }
 }
+
+const mapStateToProps = (state) => ({
+    cities: state.cities,
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  delCity: (city) => dispatch(delCity(city))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Cities);
 
 styles = StyleSheet.create({
   cityContainer: {

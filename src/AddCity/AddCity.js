@@ -13,24 +13,24 @@ import {
 import 'react-native-get-random-values'
 import { v4 as uuidV4 } from 'uuid';
 import { colors } from '../theme';
-import Context from "../../Context";
 import LinearGradient from 'react-native-linear-gradient';
 import Geolocation from 'react-native-geolocation-service';
 
-export default class AddCity extends React.Component {
+import { connect } from 'react-redux';
+import { addCity } from '../reducers/CitiesSlice';
 
-  static contextType = Context;
+class AddCity extends React.Component {
 
   state = {
-    city: '',
-    country: '',
+    city: 'testtest',
+    country: 'testtest',
   }
 
   onChangeText = (key, value) => {
     this.setState({ [key]: value })
   }
 
-  submit = props => {
+  submit = () => {
     if (this.state.city === '' || this.state.country === '') {
       alert('Please complete form');
       return;
@@ -42,7 +42,8 @@ export default class AddCity extends React.Component {
       locations: []
     }
 
-    this.context.addCity(city);
+    this.props.addCity(city);
+
     this.setState({ city: '', country: '' }, () => {
       this.props.navigation.navigate('Cities')
     })
@@ -51,7 +52,7 @@ export default class AddCity extends React.Component {
   getCoordinates = async () => {
 
     const isGranted = await PermissionsAndroid.check('android.permission.ACCESS_FINE_LOCATION');
-    
+
     if (!isGranted) {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
@@ -60,12 +61,12 @@ export default class AddCity extends React.Component {
 
       if (granted !== 'granted' && granted !== 'restricted') return
     }
-    
+
     return new Promise((resolve, reject) => {
       Geolocation.getCurrentPosition(
         (position) => resolve(position.coords),
-        (err) => reject(err), 
-        {enableHighAccuracy: true, timeout: 10000, maximumAge: 10000}
+        (err) => reject(err),
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 10000 }
       );
     })
 
@@ -93,7 +94,6 @@ export default class AddCity extends React.Component {
         ToastAndroid.show('Error while getting coordinates', ToastAndroid.SHORT)
       }
     }
-    console.log("coord", coordinates)
 
     let data;
     try {
@@ -104,8 +104,6 @@ export default class AddCity extends React.Component {
         ToastAndroid.show('Error while getting place from coordinates', ToastAndroid.SHORT)
       }
     }
-
-    console.log(data)
 
     let cityName;
     const scale = ["hamlet", "village", "town", "city"]
@@ -118,11 +116,10 @@ export default class AddCity extends React.Component {
 
     const countryName = data.address.country;
 
-    this.setState({city: cityName, country: countryName})
+    this.setState({ city: cityName, country: countryName })
   }
 
   render() {
-
     return (
       <View style={styles.container}>
         <Text style={styles.heading}>Cities</Text>
@@ -141,19 +138,31 @@ export default class AddCity extends React.Component {
           value={this.state.country}
         />
         <TouchableOpacity onPress={this.submit}>
-          <LinearGradient colors={['#333', '#777']} style={styles.button} start={{x: 0, y: 0}} end={{x: 1, y: 1}}>
-              <Text style={styles.buttonText}>Add City</Text>
+          <LinearGradient colors={['#333', '#777']} style={styles.button} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
+            <Text style={styles.buttonText}>Add City</Text>
           </LinearGradient>
         </TouchableOpacity>
         <TouchableOpacity onPress={this.getLocation}>
-          <LinearGradient colors={['#333', '#777']} style={styles.button} start={{x: 0, y: 0}} end={{x: 1, y: 1}}>
-              <Text style={styles.buttonText}>get from location</Text>
+          <LinearGradient colors={['#333', '#777']} style={styles.button} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
+            <Text style={styles.buttonText}>get from location</Text>
           </LinearGradient>
         </TouchableOpacity>
       </View>
     )
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    cities: state.cities
+  }
+}
+
+const mapDispatchToProps = (dispatch) => ({
+  addCity: (city) => dispatch(addCity(city)),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddCity)
 
 const styles = StyleSheet.create({
   button: {

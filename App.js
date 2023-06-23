@@ -6,26 +6,27 @@ import { NavigationContainer } from '@react-navigation/native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import Context from './Context';
+import store from './src/reducers';
+import { Provider } from 'react-redux';
 
 const key = 'state';
 
-export default class App extends Component {
+export default class App extends Component { // TODO save cities in asynStorage
   state = {
     cities: []
   }
 
   async componentDidMount() {
-    try {
-      let cities = await AsyncStorage.getItem(key);
-      cities = JSON.parse(cities);
-      // cities.push({ "city": "Paris", "country": "France", "id": "e95fe2e5-62f3-4d5c-a537-4ed7b913564f", "locations": [] });
-      if (cities !== null) this.setState({cities});
-      console.log('cities found : ', cities)
-    } catch (error) {
-      console.log('error from asyncStorage : ', error)
-      // this.setState({cities : [{ "city": "Paris", "country": "France", "id": "e95fe2e5-62f3-4d5c-a537-4ed7b913564f", "locations": [] }]})
-    }
+    // try {
+    //   let cities = await AsyncStorage.getItem(key);
+    //   cities = JSON.parse(cities);
+    //   // cities.push({ "city": "Paris", "country": "France", "id": "e95fe2e5-62f3-4d5c-a537-4ed7b913564f", "locations": [] });
+    //   if (cities !== null) this.setState({cities});
+    //   console.log('cities found : ', cities)
+    // } catch (error) {
+    //   console.log('error from asyncStorage : ', error)
+    //   // this.setState({cities : [{ "city": "Paris", "country": "France", "id": "e95fe2e5-62f3-4d5c-a537-4ed7b913564f", "locations": [] }]})
+    // }
   }
 
   addCity = (city) => {
@@ -78,17 +79,11 @@ export default class App extends Component {
   
   render() {
     return (
-      <MyContext.Provider value={{
-        cities: this.state.cities,
-        addCity: this.addCity,
-        addLocation: this.addLocation,
-        delCity: this.delCity,
-        delLocation: this.delLocation,
-    }}>
-        <NavigationContainer>
-          <Tabs />
-        </NavigationContainer>
-      </MyContext.Provider>
+        <Provider store={store}>
+          <NavigationContainer>
+            <Tabs />
+          </NavigationContainer>
+      </Provider>
     )
   }
 }

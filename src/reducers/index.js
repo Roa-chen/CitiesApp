@@ -1,8 +1,8 @@
-import combineReducer from 'redux';
-import citiesReducer from './CitiesReducer';
+import CitiesSlice from './CitiesSlice';
+import { configureStore } from '@reduxjs/toolkit';
 
-const rootReducer = combineReducer({
-  citiesReducer,
+export default configureStore({
+  reducer: {
+    cities: CitiesSlice
+  }
 })
-
-export default rootReducer;
