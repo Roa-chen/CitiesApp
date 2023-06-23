@@ -24,14 +24,15 @@ export const citiesSlice = createSlice({
     },
     delLocationToState: (state, action) => {
       const index = state.cities.findIndex(item => item.id === action.payload.city.id)
-      const locationIndex = state.cities[index].locations.findIndex(item => item !== action.payload.location)
+      console.log(state.cities[index].locations, action.payload.location)
+
+      const locationIndex = state.cities[index].locations.findIndex(item => (JSON.stringify(item) === JSON.stringify(action.payload.location)))
+      
+      console.log("locationIndex:", locationIndex)
       state.cities[index].locations.splice(locationIndex, 1)
     },
     setCitiesToState: (state, action) => {
-      action.payload.forEach(element => {
-        state.cities.push(element)
-      });
-      console.log(state.cities)
+      state.cities.splice(0, 0, ...action.payload)
     }
   }
 })
@@ -47,14 +48,15 @@ export const delCity = payload => (dispatch, state) => {
     .catch(e => console.log('error : ', e))
 }
 export const addLocation = payload => (dispatch, state) => {
+  dispatch(addLocationToState(payload))
   AsyncStorage.setItem(key, JSON.stringify(state().cities))
     .catch(e => console.log('error : ', e))
-  dispatch(addLocationToState(payload))
 }
 export const delLocation = payload => (dispatch, state) => {
+  console.log(payload)
+  dispatch(delLocationToState(payload))
   AsyncStorage.setItem(key, JSON.stringify(state().cities))
   .catch(e => console.log('error : ', e))
-  dispatch(delLocationToState(payload))
 }
 export const setCities = () => async dispatch => {
   let cities = await AsyncStorage.getItem(key)
