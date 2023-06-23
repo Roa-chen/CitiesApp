@@ -26,15 +26,13 @@ class Cities extends React.Component {
       }
     }
 
-  navigate = (item) => {
-    this.props.navigation.navigate('City', { city: item });
-    console.log("navigate")
+  navigate = (itemId) => {
+    this.props.navigation.navigate('City', { cityId: itemId });
   }
 
   render() {
 
     const {cities} = this.props.cities;
-    console.log('rerender')
 
     return (
       <ScrollView contentContainerStyle={[!cities.length && { flex: 1 }]}>
@@ -43,7 +41,7 @@ class Cities extends React.Component {
           {
             cities.map((item, index) => (
               <View style={styles.cityContainer} key={index}>
-                <TouchableWithoutFeedback onPress={() => (this.navigate(item))} >
+                <TouchableWithoutFeedback onPress={() => (this.navigate(item.id))} >
                   <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', }}>
                     <View style={{ width: '80%' }}>
                       <Text numberOfLines={1} style={styles.city}>{item.city}</Text>

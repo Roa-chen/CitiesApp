@@ -22,8 +22,8 @@ import { addCity } from '../reducers/CitiesSlice';
 class AddCity extends React.Component {
 
   state = {
-    city: 'testtest',
-    country: 'testtest',
+    city: '',
+    country: '',
   }
 
   onChangeText = (key, value) => {

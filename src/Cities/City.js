@@ -20,12 +20,12 @@ import { addLocation, delLocation } from "../reducers/CitiesSlice";
 class City extends React.Component {
 
   componentDidMount() {
-    this.props.navigation.setOptions({ title: this.props.route.params.city.city });
+    this.props.navigation.setOptions({ title: this.props.city.city });
   }
 
   state = {
-    name: 'testtest',
-    info: 'testtest'
+    name: '',
+    info: ''
   }
 
   onChangeText = (key, value) => {
@@ -35,7 +35,7 @@ class City extends React.Component {
   addLocations = () => {
     if (this.state.name === '' || this.state.info === '') return
 
-    const { city } = this.props.route.params;
+    const { city } = this.props;
     const location = {
       name: this.state.name,
       info: this.state.info
@@ -45,7 +45,7 @@ class City extends React.Component {
   }
 
   share = async (location) => {
-    const { city } = this.props.route.params;
+    const { city } = this.props;
 
     try {
       const response = await Share.share({ message: `Hey, I have visited "${location.name}" in ${city.city}, ${city.country}.`, title: 'message title' })
@@ -63,7 +63,7 @@ class City extends React.Component {
   )
 
   render() {
-    const { city } = this.props.route.params;
+    const { city } = this.props;
 
     return (
       <View style={{ flex: 1 }}>
@@ -114,12 +114,17 @@ class City extends React.Component {
   }
 }
 
+const mapStateToProps = (state, ownProps) => {
+  const city = state.cities.cities.find(city => city.id === ownProps.route.params.cityId)
+  return {city}
+} 
+
 const mapDispatchToProps = (dispatch) => ({
   addLocation: (payload) => dispatch(addLocation(payload)),
   delLocation: (payload) => dispatch(delLocation(payload)) 
 }) 
 
-export default connect(null, mapDispatchToProps)(City)
+export default connect(mapStateToProps, mapDispatchToProps)(City)
 
 const styles = StyleSheet.create({
   actionBarContainer: {
