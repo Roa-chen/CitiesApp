@@ -7,16 +7,18 @@ import { NavigationContainer } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import store from './src/reducers';
-import { Provider } from 'react-redux';
+import { Provider, connect } from 'react-redux';
+import { setCities } from './src/reducers/CitiesSlice';
 
 const key = 'state';
 
-export default class App extends Component { // TODO save cities in asynStorage
+class App extends Component { // TODO save cities in asynStorage
   state = {
     cities: []
   }
 
   async componentDidMount() {
+    this.props.setCities()
     // try {
     //   let cities = await AsyncStorage.getItem(key);
     //   cities = JSON.parse(cities);
@@ -79,12 +81,17 @@ export default class App extends Component { // TODO save cities in asynStorage
   
   render() {
     return (
-        <Provider store={store}>
-          <NavigationContainer>
-            <Tabs />
-          </NavigationContainer>
+      <Provider store={store}>
+        <NavigationContainer>
+          <Tabs />
+        </NavigationContainer>
       </Provider>
     )
   }
 }
 
+const mapDispatchToProps = (dispatch) => ({
+  setCities: () => dispatch(setCities())
+})
+
+export default connect(null, mapDispatchToProps)(App)
