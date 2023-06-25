@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "625931115059",
+    "project_id": "citiesapp-388108",
+    "storage_bucket": "citiesapp-388108.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:625931115059:android:11d2a7f5fa54052127a146",
+        "android_client_info": {
+          "package_name": "com.citiesappwithoutexpo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "625931115059-n9ai1s3g2097hsctt8d94ljn94pecif9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAK5Ae_KdD9ZtEoAwbOIotx3dru2bOcaG4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "625931115059-n9ai1s3g2097hsctt8d94ljn94pecif9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
