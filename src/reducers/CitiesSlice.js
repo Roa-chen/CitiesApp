@@ -3,7 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const key = 'state';
 
-export const citiesSlice = createSlice({
+const citiesSlice = createSlice({
   name: 'cities',
   initialState: {
     cities: []
