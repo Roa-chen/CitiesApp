@@ -14,7 +14,6 @@ export default WaitEmail = ({navigation}) => {
   }
 
   const handleDone = () => {
-    auth().signInWithEmailAndPassword('arsepbelle@gmail.com', 'passsword')
     const user = auth().currentUser;
     console.log(user)
     if (user.emailVerified) {

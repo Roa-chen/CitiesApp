@@ -19,6 +19,7 @@ const CitiesNav = (props) => {
   return (
     <Stack.Navigator screenOptions={{
       headerStyle: {backgroundColor: colors.primary}, 
+      headerTintColor: 'white',
       headerTitleStyle: {
         color: 'white',
         fontWeight: '400',

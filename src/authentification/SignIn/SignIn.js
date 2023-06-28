@@ -12,31 +12,32 @@ export default LogIn = ({navigation}) => {
   const [passwordText, setPasswordText] = useState("");
 
   const singIn = () => {
-    // navigation.navigate("WaitEmail", 'test')
+    if (emailText == '' || passwordText == '') {
+      Alert.alert('Error', 'You have to enter your informations before logging in.')
+    } else {
+      auth().createUserWithEmailAndPassword(emailText, passwordText)
+        .then(user => {
+          if (user && user.emailVerified) {
+            setEmailText('')
+            setPasswordText('')
+            navigation.navigate("App")
+          } else {
+            navigation.navigate("WaitEmail")
+          }
+        })
+        .catch(error => {
+          if (error.code === 'auth/email-already-in-use') {
+            console.log('That email address is already in use!');
+          }
 
-    auth().createUserWithEmailAndPassword(emailText, passwordText)
-      .then(user => {
-        console.log(user)
-        if (user && user.emailVerified) {
-          console.log("okk");
-          navigation.navigate("App")
-        } else {
-          console.log("needEmail");
-          navigation.navigate("WaitEmail")
-        }
-      })
-      .catch(error => {
-        if (error.code === 'auth/email-already-in-use') {
-          console.log('That email address is already in use!');
-        }
+          if (error.code === 'auth/invalid-email') {
+            console.log('That email address is invalid!');
+          }
 
-        if (error.code === 'auth/invalid-email') {
-          console.log('That email address is invalid!');
-        }
-
-        Alert.alert('Error', error.toString())
-        console.error(error);
-      });
+          Alert.alert('Error', error.toString())
+          console.error(error);
+        });
+    }    
   }
 
   return (
@@ -44,7 +45,6 @@ export default LogIn = ({navigation}) => {
       <CustomTextInput text="email..." onChange={setEmailText} value={emailText} inputMode="email" />
       <CustomTextInput text="password..." onChange={setPasswordText} value={passwordText} inputMode="text" secureTextEntry />
       <CustomButton title="Sign In" onPress={singIn} />
-      <CustomButton title="test" onPress={() => navigation.navigate("WaitEmail")} />
     </View>
   )
 }

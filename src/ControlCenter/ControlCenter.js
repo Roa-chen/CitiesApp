@@ -4,10 +4,11 @@ import { View, Button, StyleSheet } from "react-native"
 import auth from '@react-native-firebase/auth';
 import CustomButton from "../components/CustomButton";
 
-export default ControlCenter = () => {
+export default ControlCenter = ({navigation}) => {
 
   const logOut = () => {
-    auth().signOut()
+    auth().signOut();
+    navigation.navigate("Authentification");
   }
 
   return (

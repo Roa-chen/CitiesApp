@@ -21,7 +21,6 @@ class App extends Component {
 
   onAuthStateChange = (user) => {
     this.setState({user, initializing: false})
-    if (user == null) console.log("null");
   }
 
   subscriber = null;

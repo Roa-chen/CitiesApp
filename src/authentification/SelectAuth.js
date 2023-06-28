@@ -18,14 +18,16 @@ export default LogIn = ({navigation}) => {
   }
   
   const logIn = () => {
-    console.log('test')
-    auth().signInWithEmailAndPassword(emailText, passwordText)
-      .then(user => {
-        if (user && user.emailVerified) {
-          console.log("okk");
+    if (emailText == '' || passwordText == '') {
+      Alert.alert('Error', 'You have to enter your informations before logging in.')
+    } else {
+      auth().signInWithEmailAndPassword(emailText, passwordText)
+      .then(info => {
+        if (info.user && info.user.emailVerified) {
+          setEmailText('')
+          setPasswordText('')
           navigation.navigate("App")
         } else {
-          console.log("needEmail");
           navigation.navigate("WaitEmail")
         }
       })
@@ -37,6 +39,7 @@ export default LogIn = ({navigation}) => {
           Alert.alert('Error', err.toString())
         }
       })
+    }
   }
 
   return (
