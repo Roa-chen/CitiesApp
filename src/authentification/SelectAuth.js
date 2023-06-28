@@ -38,5 +38,6 @@ const styles = StyleSheet.create({
   separator: {
     fontSize: 20,
     marginTop: 20,
+    color: colors.text,
   }
 })

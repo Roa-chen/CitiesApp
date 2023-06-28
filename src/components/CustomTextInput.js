@@ -4,7 +4,7 @@ import { colors } from '../theme'
 export default CustomButton = ({text, onChange, style={}, value, inputMode='text'}) => {
   return (
     <View style={[styles.container, style]}>
-      <TextInput placeholder={text} onChangeText={onChange} value={value} style={styles.TextInput} inputMode={inputMode} />
+      <TextInput placeholder={text} placeholderTextColor={colors.text} onChangeText={onChange} value={value} style={styles.TextInput} inputMode={inputMode} />
     </View>
   )
 }
