@@ -42,7 +42,7 @@ export default LogIn = ({navigation}) => {
   return (
     <View style={styles.container}>
       <CustomTextInput text="email..." onChange={setEmailText} value={emailText} inputMode="email" />
-      <CustomTextInput text="password..." onChange={setPasswordText} value={passwordText} inputMode="text" />
+      <CustomTextInput text="password..." onChange={setPasswordText} value={passwordText} inputMode="text" secureTextEntry />
       <CustomButton title="Sign In" onPress={singIn} />
       <CustomButton title="test" onPress={() => navigation.navigate("WaitEmail")} />
     </View>

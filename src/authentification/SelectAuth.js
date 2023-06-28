@@ -42,7 +42,7 @@ export default LogIn = ({navigation}) => {
   return (
     <View style={styles.container}>
       <CustomTextInput text="email..." onChange={setEmailText} value={emailText} inputMode="email" />
-      <CustomTextInput text="password..." onChange={setPasswordText} value={passwordText} inputMode="text" />
+      <CustomTextInput text="password..." onChange={setPasswordText} value={passwordText} inputMode="text" secureTextEntry />
       <CustomButton title="Log In" onPress={logIn} />
       <View style={styles.orContainer}>
         <LinearGradient colors={['#ffffff00', colors.text]} style={styles.gradient} start={{x: 0.5, y: 0.5}} end={{x: 1, y: .5}} />
