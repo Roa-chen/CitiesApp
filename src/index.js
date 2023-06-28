@@ -11,15 +11,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 
 import Icon from 'react-native-vector-icons/AntDesign';
-
-const options = {
-  navigationOptions: {
-    headerStyle: {
-      backgroundColor: colors.primary,
-    },
-    headerTintColor: '#fff',
-  },
-};
+import ControlCenter from './ControlCenter/ControlCenter';
 
 const Stack = createStackNavigator()
 
@@ -91,6 +83,8 @@ const Tabs = props => {
           tabBarButton: (props) => <TabButton {...props} name="home" /> }} />
       <Tab.Screen name="AddCity" component={AddCity} options={{
           tabBarButton: (props) => <TabButton {...props} name="plus" /> }} />
+      <Tab.Screen name="ControlCenter" component={ControlCenter} options={{
+          tabBarButton: (props) => <TabButton {...props} name="setting" /> }} />
     </Tab.Navigator>
   )
 }

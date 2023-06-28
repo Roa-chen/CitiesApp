@@ -1,35 +1,44 @@
-import React, { Component, useState, createContext } from 'react';
-import { StyleSheet, Text, View, Button, StatusBar } from 'react-native';
+import React, { Component, useState } from 'react';
 
 import Tabs from "./src/index";
 import { NavigationContainer } from '@react-navigation/native';
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Provider } from 'react-redux';
+import store from './src/reducers/index'
 
-import store from './src/reducers';
-import { Provider, connect } from 'react-redux';
-import { setCities } from './src/reducers/CitiesSlice';
+import auth from '@react-native-firebase/auth';
+import Authentification from './src/authentification/Authentification';
+class App extends Component {
 
-const key = 'state';
+  state = {
+    user: null,
+    initializing: true,
+  }
 
-class App extends Component { // TODO save cities in asynStorage
+  onAuthStateChange = (user) => {
+    this.setState({user, initializing: false})
+    console.log(user)
+  }
 
-
-  async componentDidMount() {
-    this.props.setCities()
+  componentDidMount() {
+    const subscriber = auth().onAuthStateChanged(this.onAuthStateChange);
+    return subscriber
   }
 
   render() {
+
+    if (this.state.initializing) return null
+    
+    if (!this.state.user) return <Authentification />
+
     return (
-      <NavigationContainer>
-        <Tabs />
-      </NavigationContainer>
+      <Provider store={store}>
+        <NavigationContainer>
+          <Tabs />
+        </NavigationContainer>
+      </Provider>
     )
   }
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  setCities: () => dispatch(setCities())
-})
-
-export default connect(null, mapDispatchToProps)(App)
+export default App
