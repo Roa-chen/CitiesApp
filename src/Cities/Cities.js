@@ -11,10 +11,14 @@ import {
 
 import CenterMessage from "../components/CenterMessage";
 import { colors } from "../theme";
-import { delCity } from "../reducers/CitiesSlice";
+import { delCity, setCities } from "../reducers/CitiesSlice";
 import { connect } from 'react-redux'
 
 class Cities extends React.Component {
+
+  componentDidMount() {
+    this.props.setCities()
+  }
 
   static navigationOptions =
     {
@@ -70,7 +74,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  delCity: (city) => dispatch(delCity(city))
+  delCity: (city) => dispatch(delCity(city)),
+  setCities: () => dispatch(setCities())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Cities);

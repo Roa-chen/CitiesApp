@@ -1,35 +1,57 @@
-import React, { Component, useState, createContext } from 'react';
-import { StyleSheet, Text, View, Button, StatusBar } from 'react-native';
+import React, { Component } from 'react';
 
 import Tabs from "./src/index";
+import Authentification from './src/authentification/Authentification';
+import WaitEmail from './src/authentification/SignIn/WaitEmail';
+
 import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Provider } from 'react-redux';
+import store from './src/reducers/index'
 
-import store from './src/reducers';
-import { Provider, connect } from 'react-redux';
-import { setCities } from './src/reducers/CitiesSlice';
+import auth from '@react-native-firebase/auth';
+import CustomButton from './src/components/CustomButton';
+class App extends Component {
 
-const key = 'state';
-
-class App extends Component { // TODO save cities in asynStorage
-
-
-  async componentDidMount() {
-    this.props.setCities()
+  state = {
+    user: null,
+    initializing: true,
   }
 
+  onAuthStateChange = (user) => {
+    this.setState({user, initializing: false})
+    if (user == null) console.log("null");
+  }
+
+  subscriber = null;
+
+  componentDidMount() {
+    this.subscriber = auth().onAuthStateChanged(this.onAuthStateChange);
+  }
+
+  componentWillUnmount() {
+    this.subscriber();
+  }
+
+  StackRoot = createStackNavigator();
+
   render() {
+
+    if (this.state.initializing) return <CustomButton title={"test"} onPress={() => {}} />
+
     return (
-      <NavigationContainer>
-        <Tabs />
-      </NavigationContainer>
+      <Provider store={store}>
+        <NavigationContainer>
+          <this.StackRoot.Navigator initialRouteName='Authentification' screenOptions={{headerShown: false}}>
+            <this.StackRoot.Screen name="App" component={Tabs} />
+            <this.StackRoot.Screen name="Authentification" component={Authentification} />
+            <this.StackRoot.Screen name="WaitEmail" component={WaitEmail} />
+          </this.StackRoot.Navigator>
+        </NavigationContainer>
+      </Provider>
     )
   }
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  setCities: () => dispatch(setCities())
-})
-
-export default connect(null, mapDispatchToProps)(App)
+export default App
