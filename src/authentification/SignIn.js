@@ -1,15 +1,18 @@
-import React from "react";
-import { View, Button, StyleSheet } from "react-native"
+import React, {useState} from "react";
+import { View, Alert, StyleSheet } from "react-native"
 
 import auth from '@react-native-firebase/auth';
 
+import CustomTextInput from "../components/CustomTextInput";
+import CustomButton from "../components/CustomButton";
+
 export default LogIn = () => {
 
-  const email = 'arsenechardon14@gmail.com'
-  const password = 'password'
+  const [emailText, setEmailText] = useState("");
+  const [passwordText, setPasswordText] = useState("");
 
   const singIn = () => {
-    auth().createUserWithEmailAndPassword(email, password)
+    auth().createUserWithEmailAndPassword(emailText, passwordText)
       .then(() => {
         console.log('User account created & signed in!');
       })
@@ -17,24 +20,28 @@ export default LogIn = () => {
         if (error.code === 'auth/email-already-in-use') {
           console.log('That email address is already in use!');
         }
-    
+        
         if (error.code === 'auth/invalid-email') {
           console.log('That email address is invalid!');
         }
-    
+        
+        Alert.alert('Error', error.toString())
         console.error(error);
       });
   }
 
   return (
-    <View>
-      <Button title="Sign In" onPress={singIn} style={styles.button} />
+    <View style={styles.container}>
+      <CustomTextInput text="email..." onChange={setEmailText} value={emailText} inputMode="email" />
+      <CustomTextInput text="password..." onChange={setPasswordText} value={passwordText} inputMode="text" />
+      <CustomButton title="Sign In" onPress={singIn} />
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  button: {
-    margin: 20,
+  container: {
+    flex: 1,
+    alignItems: 'center',
   }
 })

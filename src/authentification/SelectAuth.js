@@ -1,38 +1,31 @@
-import React from "react";
-import { View, Text, Button, StyleSheet } from "react-native"
+import React, { useState } from "react";
+import { View, Text, Alert, StyleSheet } from "react-native"
+
+import CustomButton from "../components/CustomButton"
+import CustomTextInput from "../components/CustomTextInput";
 
 import auth from '@react-native-firebase/auth';
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { colors } from "../theme";
 
 export default LogIn = ({navigation}) => {
 
-  const email = 'arsenechardon14@gmail.com'
-  const password = 'password'
+  const [emailText, setEmailText] = useState("");
+  const [passwordText, setPasswordText] = useState("");
 
   const singIn = () => {
     navigation.navigate("SignIn")
   }
   
   const logIn = () => {
-    console.log("LogIn")
-    navigation.navigate("LogIn")
-  }
-
-  const CustomButton = ({title, onPress}) => {
-    return (
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={onPress} style={styles.button}>
-          <Text style={styles.text} >{title}</Text>
-        </TouchableOpacity>
-      </View>
-    )
+    auth().signInWithEmailAndPassword(emailText, passwordText).catch(err => Alert.alert('Error', err.toString()))
   }
 
   return (
     <View style={styles.container}>
-      <CustomButton title="Sign In" onPress={singIn} />
+      <CustomTextInput text="email..." onChange={setEmailText} value={emailText} inputMode="email" />
+      <CustomTextInput text="password..." onChange={setPasswordText} value={passwordText} inputMode="text" />
       <CustomButton title="Log In" onPress={logIn} />
+      <Text style={styles.separator} >Or</Text>
+      <CustomButton title="Sign In" onPress={singIn} />
     </View>
   )
 }
@@ -42,22 +35,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
   },
-  buttonContainer: {
-    backgroundColor: colors.primary,
-    width: "80%",
-    height: 50,
-    marginTop: 20,
-    borderRadius: 10,
-  },
-  button: {
-    width: "100%",
-    height: "100%",
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  text: {
+  separator: {
     fontSize: 20,
-    color: 'white',
-    fontWeight: 'bold'
+    marginTop: 20,
   }
 })

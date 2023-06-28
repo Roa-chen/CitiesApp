@@ -2,6 +2,7 @@ import React from "react";
 import { View, Button, StyleSheet } from "react-native"
 
 import auth from '@react-native-firebase/auth';
+import CustomButton from "../components/CustomButton";
 
 export default ControlCenter = () => {
 
@@ -10,14 +11,14 @@ export default ControlCenter = () => {
   }
 
   return (
-    <View style={{flex: 1}}>
-      <Button title="Log Out" onPress={logOut} style={styles.button} />
+    <View style={styles.container}>
+      <CustomButton title="Log Out" onPress={logOut} />
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  button: {
-    margin: 20,
+  container: {
+    alignItems: 'center',
   }
 })
