@@ -4,8 +4,7 @@ import { useState } from 'react';
 import Icon from 'react-native-vector-icons/AntDesign'
 
 
-export default CustomButton = (props) => {
-  const {text, onChange, style={}, value, inputMode='text', secureTextEntry=false} = props;
+export default CustomButton = ({text, onChange, style={}, value, inputMode='text', secureTextEntry=false}) => {
 
   const [visible, setVisible] = useState(secureTextEntry);
   
@@ -16,11 +15,12 @@ export default CustomButton = (props) => {
         placeholder={text} 
         placeholderTextColor={colors.text} 
         onChangeText={onChange} value={value} 
-        style={styles.TextInput} 
+        style={[styles.TextInput, {width: secureTextEntry ? '80%' : '100%'}]} 
         inputMode={inputMode}
       />
-      {secureTextEntry && <TouchableWithoutFeedback onPress={() => setVisible(!visible)} >
-        <Icon name={visible ? "eye" : "eyeo"} style={{paddingBottom: 5}} size={30} color={colors.text} />
+      {secureTextEntry && 
+      <TouchableWithoutFeedback onPress={() => setVisible(!visible)} style={{padding: 10}} >
+        <Icon name={visible ? "eye" : "eyeo"} size={30} color={colors.text} />
       </TouchableWithoutFeedback>}
     </View>
   )
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   container: {
     width: "80%",
     height: 50,
-    marginTop: 20,
+    // marginTop: 20,
     backgroundColor: 'white',
     borderRadius: 10,
     paddingHorizontal: 10, 

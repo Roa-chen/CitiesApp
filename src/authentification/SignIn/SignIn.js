@@ -8,20 +8,25 @@ import CustomButton from "../../components/CustomButton";
 
 export default LogIn = ({navigation}) => {
 
+  const [isLoading, setLoading] = useState(false)
+
   const [emailText, setEmailText] = useState("");
   const [passwordText, setPasswordText] = useState("");
 
   const singIn = () => {
     if (emailText == '' || passwordText == '') {
-      Alert.alert('Error', 'You have to enter your informations before logging in.')
+      Alert.alert('Error', 'You must enter your informations before logging in.')
     } else {
+      setLoading(true)
       auth().createUserWithEmailAndPassword(emailText, passwordText)
         .then(user => {
           if (user && user.emailVerified) {
             setEmailText('')
             setPasswordText('')
+            setLoading(false)
             navigation.navigate("App")
           } else {
+            setLoading(false)
             navigation.navigate("WaitEmail")
           }
         })
@@ -36,15 +41,16 @@ export default LogIn = ({navigation}) => {
 
           Alert.alert('Error', error.toString())
           console.error(error);
+          setLoading(false)
         });
     }    
   }
 
   return (
     <View style={styles.container}>
-      <CustomTextInput text="email..." onChange={setEmailText} value={emailText} inputMode="email" />
-      <CustomTextInput text="password..." onChange={setPasswordText} value={passwordText} inputMode="text" secureTextEntry />
-      <CustomButton title="Sign In" onPress={singIn} />
+      <CustomTextInput text="email..." onChange={setEmailText} value={emailText} inputMode="email" style={{marginTop: 20}} />
+      <CustomTextInput text="password..." onChange={setPasswordText} value={passwordText} inputMode="none" secureTextEntry style={{marginTop: 20}} />
+      <CustomButton title="Sign In" onPress={singIn} style={{marginTop: 20}} isLoading={isLoading} />
     </View>
   )
 }

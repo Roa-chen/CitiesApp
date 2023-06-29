@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, Alert, StyleSheet } from "react-native"
+import { View, Text, Alert, StyleSheet, ActivityIndicator } from "react-native"
 
 import CustomButton from "../components/CustomButton"
 import CustomTextInput from "../components/CustomTextInput";
@@ -13,16 +13,20 @@ export default LogIn = ({navigation}) => {
   const [emailText, setEmailText] = useState("");
   const [passwordText, setPasswordText] = useState("");
 
+  const [isLoading, setLoading] = useState(false)
+
   const singIn = () => {
     navigation.navigate("SignIn")
   }
   
   const logIn = () => {
     if (emailText == '' || passwordText == '') {
-      Alert.alert('Error', 'You have to enter your informations before logging in.')
+      Alert.alert('Error', 'You must enter your informations before logging in.')
     } else {
+      setLoading(true)
       auth().signInWithEmailAndPassword(emailText, passwordText)
       .then(info => {
+        setLoading(false)
         if (info.user && info.user.emailVerified) {
           setEmailText('')
           setPasswordText('')
@@ -32,6 +36,7 @@ export default LogIn = ({navigation}) => {
         }
       })
       .catch(err => {
+        setLoading(false)
         console.log(err.code)
         if (err.code == "auth/network-request-failed") {
           Alert.alert('Error', "Please verify your network and try again.")
@@ -44,15 +49,15 @@ export default LogIn = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <CustomTextInput text="email..." onChange={setEmailText} value={emailText} inputMode="email" />
-      <CustomTextInput text="password..." onChange={setPasswordText} value={passwordText} inputMode="text" secureTextEntry />
-      <CustomButton title="Log In" onPress={logIn} />
+      <CustomTextInput text="email..." onChange={setEmailText} value={emailText} inputMode="email" style={{marginTop: 20}} />
+      <CustomTextInput text="password..." onChange={setPasswordText} value={passwordText} inputMode="none" secureTextEntry style={{marginTop: 20}} />
+      <CustomButton title="Log In" onPress={logIn} style={{marginTop: 20}} isLoading={isLoading} />
       <View style={styles.orContainer}>
         <LinearGradient colors={['#ffffff00', colors.text]} style={styles.gradient} start={{x: 0.5, y: 0.5}} end={{x: 1, y: .5}} />
         <Text style={styles.separator} >Or</Text>
         <LinearGradient colors={['#ffffff00', colors.text]} style={styles.gradient} start={{x: .5, y: .5}} end={{x: 0, y: 0.5}} />
       </View>
-      <CustomButton title="Sign In" onPress={singIn} />
+      <CustomButton title="Sign In" onPress={singIn} style={{marginTop: 20}} />
     </View>
   )
 }

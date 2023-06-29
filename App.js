@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {View, Text} from 'react-native';
 
 import Tabs from "./src/index";
 import Authentification from './src/authentification/Authentification';
@@ -21,6 +22,8 @@ class App extends Component {
 
   onAuthStateChange = (user) => {
     this.setState({user, initializing: false})
+    if (!user) this.navigationRef.current.navigate('Authentification')
+    console.log('found user: ', user);
   }
 
   subscriber = null;
@@ -33,16 +36,21 @@ class App extends Component {
     this.subscriber();
   }
 
+  navigationRef = React.createRef()
   StackRoot = createStackNavigator();
 
   render() {
 
-    if (this.state.initializing) return <CustomButton title={"test"} onPress={() => {}} />
+    if (this.state.initializing) return (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <Text style={{fontWeight: 'bold', fontSize: 50}}>Loading</Text>
+        </View>
+      )
 
     return (
       <Provider store={store}>
-        <NavigationContainer>
-          <this.StackRoot.Navigator initialRouteName='Authentification' screenOptions={{headerShown: false}}>
+        <NavigationContainer ref={this.navigationRef}>
+          <this.StackRoot.Navigator initialRouteName={(this.state.user && this.state.user.emailVerified) ? 'App' : 'Authentification'} screenOptions={{headerShown: false}}>
             <this.StackRoot.Screen name="App" component={Tabs} />
             <this.StackRoot.Screen name="Authentification" component={Authentification} />
             <this.StackRoot.Screen name="WaitEmail" component={WaitEmail} />
