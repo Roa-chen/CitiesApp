@@ -18,6 +18,8 @@ import Geolocation from 'react-native-geolocation-service';
 
 import { connect } from 'react-redux';
 import { addCity } from '../reducers/CitiesSlice';
+import CustomTextInput from '../components/CustomTextInput';
+import CustomButton from '../components/CustomButton';
 
 class AddCity extends React.Component {
 
@@ -122,31 +124,23 @@ class AddCity extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.heading}>Cities</Text>
-        <TextInput
-          placeholder='City name'
-          placeholderTextColor={'gray'}
-          onChangeText={val => this.onChangeText('city', val)}
-          style={styles.input}
-          value={this.state.city}
-        />
-        <TextInput
-          placeholder='Country name'
-          placeholderTextColor={'gray'}
-          onChangeText={val => this.onChangeText('country', val)}
-          style={styles.input}
-          value={this.state.country}
-        />
-        <TouchableOpacity onPress={this.submit}>
-          <LinearGradient colors={['#333', '#777']} style={styles.button} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
-            <Text style={styles.buttonText}>Add City</Text>
-          </LinearGradient>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={this.getLocation}>
-          <LinearGradient colors={['#333', '#777']} style={styles.button} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
-            <Text style={styles.buttonText}>get from location</Text>
-          </LinearGradient>
-        </TouchableOpacity>
+        <View style={styles.subContainer}>
+          <Text style={styles.heading}>Cities</Text>
+          <CustomTextInput
+            text='City name...'
+            onChange={val => this.onChangeText('city', val)}
+            style={styles.input}
+            value={this.state.city}
+          />
+          <CustomTextInput
+            text='Country name...'
+            onChange={val => this.onChangeText('country', val)}
+            style={styles.input}
+            value={this.state.country}
+          />
+          <CustomButton title="Add City" onPress={this.submit} style={styles.button} />
+          <CustomButton title="get from location" onPress={this.getLocation} style={styles.button} />
+        </View>
       </View>
     )
   }
@@ -166,16 +160,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(AddCity)
 
 const styles = StyleSheet.create({
   button: {
-    height: 50,
-    backgroundColor: "#666",
-    justifyContent: 'center',
-    alignItems: 'center',
     margin: 10,
-    borderRadius: 25,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 18,
   },
   heading: {
     color: "white",
@@ -184,16 +169,19 @@ const styles = StyleSheet.create({
     alignSelf: 'center'
   },
   container: {
-    backgroundColor: colors.primary,
+    backgroundColor: colors.background,
     flex: 1,
-    justifyContent: "center"
+    justifyContent: "center",
+    alignItems: 'center',
+  },
+  subContainer: {
+    backgroundColor: 'transparent',
+    justifyContent: "center",
+    alignItems: 'center',
+    width: '80%',
   },
   input: {
     margin: 10,
-    backgroundColor: 'white',
     paddingHorizontal: 8,
-    height: 50,
-    color: 'black',
-    borderRadius: 25,
   }
 });

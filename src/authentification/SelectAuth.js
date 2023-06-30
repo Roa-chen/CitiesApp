@@ -8,7 +8,7 @@ import { colors } from "../theme";
 import auth from '@react-native-firebase/auth';
 import LinearGradient from "react-native-linear-gradient";
 
-export default LogIn = ({navigation}) => {
+export default LogIn = ({ navigation }) => {
 
   const [emailText, setEmailText] = useState("");
   const [passwordText, setPasswordText] = useState("");
@@ -18,58 +18,60 @@ export default LogIn = ({navigation}) => {
   const singIn = () => {
     navigation.navigate("SignIn")
   }
-  
+
   const logIn = () => {
     if (emailText == '' || passwordText == '') {
       Alert.alert('Error', 'You must enter your informations before logging in.')
     } else {
       setLoading(true)
       auth().signInWithEmailAndPassword(emailText, passwordText)
-      .then(info => {
-        setLoading(false)
-        if (info.user && info.user.emailVerified) {
-          setEmailText('')
-          setPasswordText('')
-          navigation.navigate("App")
-        } else {
-          navigation.navigate("WaitEmail")
-        }
-      })
-      .catch(err => {
-        setLoading(false)
-        console.log(err.code)
-        if (err.code == "auth/network-request-failed") {
-          Alert.alert('Error', "Please verify your network and try again.")
-        } else {
-          Alert.alert('Error', err.toString())
-        }
-      })
+        .then(info => {
+          setLoading(false)
+          if (info.user && info.user.emailVerified) {
+            setEmailText('')
+            setPasswordText('')
+            navigation.navigate("App")
+          } else {
+            navigation.navigate("WaitEmail")
+          }
+        })
+        .catch(err => {
+          setLoading(false)
+          console.log(err.code)
+          if (err.code == "auth/network-request-failed") {
+            Alert.alert('Error', "Please verify your network and try again.")
+          } else {
+            Alert.alert('Error', err.toString())
+          }
+        })
     }
   }
 
   return (
-    <View style={styles.container}>
-      <CustomTextInput text="email..." onChange={setEmailText} value={emailText} inputMode="email" style={{marginTop: 20}} />
-      <CustomTextInput text="password..." onChange={setPasswordText} value={passwordText} inputMode="none" secureTextEntry style={{marginTop: 20}} />
-      <CustomButton title="Log In" onPress={logIn} style={{marginTop: 20}} isLoading={isLoading} />
-      <View style={styles.orContainer}>
-        <LinearGradient colors={['#ffffff00', colors.text]} style={styles.gradient} start={{x: 0.5, y: 0.5}} end={{x: 1, y: .5}} />
-        <Text style={styles.separator} >Or</Text>
-        <LinearGradient colors={['#ffffff00', colors.text]} style={styles.gradient} start={{x: .5, y: .5}} end={{x: 0, y: 0.5}} />
+    <View style={{ flex: 1, alignItems: 'center' }}>
+      <View style={styles.container}>
+        <CustomTextInput text="email..." onChange={setEmailText} value={emailText} inputMode="email" style={{ marginTop: 20 }} />
+        <CustomTextInput text="password..." onChange={setPasswordText} value={passwordText} inputMode="none" secureTextEntry style={{ marginTop: 20 }} />
+        <CustomButton title="Log In" onPress={logIn} style={{ marginTop: 20 }} isLoading={isLoading} />
+        <View style={styles.orContainer}>
+          <LinearGradient colors={['#ffffff00', colors.textLight]} style={styles.gradient} start={{ x: 0.5, y: 0.5 }} end={{ x: 1, y: .5 }} />
+          <Text style={styles.separator} >Or</Text>
+          <LinearGradient colors={['#ffffff00', colors.textLight]} style={styles.gradient} start={{ x: .5, y: .5 }} end={{ x: 0, y: 0.5 }} />
+        </View>
+        <CustomButton title="Sign In" onPress={singIn} style={{ marginTop: 20 }} />
       </View>
-      <CustomButton title="Sign In" onPress={singIn} style={{marginTop: 20}} />
     </View>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: 'center',
+    width: '80%',
   },
   separator: {
     fontSize: 20,
-    color: colors.text,
+    color: colors.textLight,
     marginHorizontal: 10,
   },
   orContainer: {

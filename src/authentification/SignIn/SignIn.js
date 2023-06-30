@@ -47,17 +47,19 @@ export default LogIn = ({navigation}) => {
   }
 
   return (
-    <View style={styles.container}>
-      <CustomTextInput text="email..." onChange={setEmailText} value={emailText} inputMode="email" style={{marginTop: 20}} />
-      <CustomTextInput text="password..." onChange={setPasswordText} value={passwordText} inputMode="none" secureTextEntry style={{marginTop: 20}} />
-      <CustomButton title="Sign In" onPress={singIn} style={{marginTop: 20}} isLoading={isLoading} />
+    <View style={{flex: 1, alignItems: 'center'}}>
+      <View style={styles.container}>
+        <CustomTextInput text="email..." onChange={setEmailText} value={emailText} inputMode="email" style={{marginTop: 20}} />
+        <CustomTextInput text="password..." onChange={setPasswordText} value={passwordText} inputMode="none" secureTextEntry style={{marginTop: 20}} />
+        <CustomButton title="Sign In" onPress={singIn} style={{marginTop: 20}} isLoading={isLoading} />
+      </View>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: 'center',
+    width: '80%',
   }
 })

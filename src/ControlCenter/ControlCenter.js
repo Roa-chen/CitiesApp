@@ -1,20 +1,23 @@
 import React, { useState, useRef, useEffect } from "react";
 import { View, Dimensions, StyleSheet, Animated, Alert, Text, ScrollView, RefreshControl, ActivityIndicator } from "react-native"
 
+import { UseSelector, useSelector } from "react-redux";
+
 import auth from '@react-native-firebase/auth';
 import CustomButton from "../components/CustomButton";
 
-import { DefaultTheme } from "@react-navigation/native";
+import { DefaultTheme, DarkTheme } from "@react-navigation/native";
 import CustomTextInput from "../components/CustomTextInput";
 import { colors } from "../theme";
 
-const ButtonWidth = Dimensions.get("screen").width*80/100
+const ButtonWidth = Dimensions.get("screen").width * 80 / 100
 
-export default ControlCenter = ({navigation}) => {
+export default ControlCenter = ({ navigation }) => {
+
+  const darkMode = useSelector((state) => state.theme.darkMode)
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', (test) => {
-      console.log(test)
+    const unsubscribe = navigation.addListener('focus', () => {
       if (showEmail) {
         setShowEmail(false);
         emailPaddingValue.setValue(10);
@@ -27,13 +30,13 @@ export default ControlCenter = ({navigation}) => {
 
   const onRefresh = () => {
     console.log(auth().currentUser)
-    
+
     auth().currentUser.reload()
-    .then(setRefreshing(false))
-    .catch(err => {
-      console.log(err)
-      setRefreshing(false)
-    })
+      .then(setRefreshing(false))
+      .catch(err => {
+        console.log(err)
+        setRefreshing(false)
+      })
   }
 
   const [showEmail, setShowEmail] = useState(false);
@@ -61,16 +64,16 @@ export default ControlCenter = ({navigation}) => {
   })
 
   const emailAnimationOpen = () => {
-    Animated.timing(emailPaddingValue, {toValue: 150, duration: 100, useNativeDriver: false}).start()
+    Animated.timing(emailPaddingValue, { toValue: 150, duration: 100, useNativeDriver: false }).start()
     setShowEmail(!showEmail)
   }
   const emailAnimationClose = () => {
-    Animated.timing(emailPaddingValue, {toValue: 10, duration: 100, useNativeDriver: false}).start()
+    Animated.timing(emailPaddingValue, { toValue: 10, duration: 100, useNativeDriver: false }).start()
     setShowEmail(!showEmail)
   }
 
   const handleEmailChange = () => {
-    if (emailText == '' ||passwordText == '') {
+    if (emailText == '' || passwordText == '') {
       Alert.alert('Error', 'You must enter your informations before logging in.')
       console.log(auth().currentUser.email)
       return;
@@ -107,28 +110,29 @@ export default ControlCenter = ({navigation}) => {
         setEmailLoading(false)
       })
   }
-  
+
   return (
     <ScrollView contentContainerStyle={styles.container} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
-      {/* Log out Part */}
-      <CustomButton title="Log Out" onPress={logOut} style={{marginTop: 20}} />
-      {/* Email Text */}
-      <Text style={styles.displayText} >email : {auth().currentUser.email}</Text>
-      {/* Change Email Part */}
-      <Animated.View style={[styles.detailContainer, {paddingBottom: emailPaddingValue, elevation: emailElevationValue}]}>
-        <CustomButton title="Change Email" onPress={!showEmail ? emailAnimationOpen : emailAnimationClose} style={{width: ButtonWidth, zIndex: 2}} />
-          <Animated.View style={{width: ButtonWidth, position: 'absolute', top: emailEntryPosition, flexDirection: "row", justifyContent: 'space-between'}}>
-            <CustomTextInput text="new Email..." style={{width: '70%'}} inputMode="email" value={emailText} onChange={setEmailText} />
-            <CustomButton title="change" style={{width: '25%'}} onPress={handleEmailChange} />
+      <View style={{width: '80%', alignItems: 'center'}}>
+        {/* Log out Part */}
+        <CustomButton title="Log Out" onPress={logOut} style={{ marginTop: 20 }} />
+        {/* Email Text */}
+        <Text style={styles.displayText} >email : {"\n"}{auth().currentUser.email}</Text>
+        {/* Change Email Part */}
+        <Animated.View style={[styles.detailContainer, { paddingBottom: emailPaddingValue, elevation: emailElevationValue, backgroundColor: (darkMode ? DarkTheme : DefaultTheme).colors.background }]}>
+          <CustomButton title="Change Email" onPress={!showEmail ? emailAnimationOpen : emailAnimationClose} style={{ width: ButtonWidth, zIndex: 2 }} />
+          <Animated.View style={{ width: ButtonWidth, position: 'absolute', top: emailEntryPosition, flexDirection: "row", justifyContent: 'space-between' }}>
+            <CustomTextInput text="new Email..." style={{ width: '70%' }} inputMode="email" value={emailText} onChange={setEmailText} />
+            <CustomButton title="change" style={{ width: '25%' }} onPress={handleEmailChange} />
           </Animated.View>
-          <Animated.View style={{width: ButtonWidth, position: 'absolute', top: passwordEntryPosition, flexDirection: "row", justifyContent: 'space-between'}}>
-            <CustomTextInput text="your password..." secureTextEntry style={{width: '70%'}} inputMode="none" value={passwordText} onChange={setPasswordText} />
-            <View style={{width: '25%', justifyContent: 'center', alignItems: 'center'}}>
-              { emailLoading && <ActivityIndicator size={'large'}/>}
+          <Animated.View style={{ width: ButtonWidth, position: 'absolute', top: passwordEntryPosition, flexDirection: "row", justifyContent: 'space-between' }}>
+            <CustomTextInput text="your password..." secureTextEntry style={{ width: '70%' }} inputMode="none" value={passwordText} onChange={setPasswordText} />
+            <View style={{ width: '25%', justifyContent: 'center', alignItems: 'center' }}>
+              {emailLoading && <ActivityIndicator size={'large'} />}
             </View>
           </Animated.View>
-      </Animated.View>
-
+        </Animated.View>
+      </View>
     </ScrollView>
   )
 }
@@ -147,7 +151,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   displayText: {
-    color: colors.text,
+    color: colors.textLight,
     // alignSelf: "flex-start",
     fontSize: 20,
     marginTop: 20,

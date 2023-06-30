@@ -1,7 +1,7 @@
-import {StyleSheet, View, TouchableOpacity, Text, ActivityIndicator } from 'react-native'
+import { StyleSheet, View, TouchableOpacity, Text, ActivityIndicator } from 'react-native'
 import { colors } from '../theme'
 
-export default CustomButton = ({title, onPress, style={}, isLoading=false}) => {
+export default CustomButton = ({ title, onPress, style = {}, isLoading = false }) => {
   return (
     <View style={[styles.buttonContainer, style]}>
       <TouchableOpacity onPress={onPress} style={styles.button}>
@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     backgroundColor: colors.primary,
-    width: "80%",
+    width: "100%",
     height: 50,
     borderRadius: 10,
   },
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 20,
-    color: 'white',
+    color: colors.textDark,
     fontWeight: 'bold'
   }
 })

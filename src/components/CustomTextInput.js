@@ -1,39 +1,42 @@
-import {StyleSheet, View, TextInput, TouchableWithoutFeedback} from 'react-native'
+import { StyleSheet, View, TextInput, TouchableWithoutFeedback } from 'react-native'
 import { colors } from '../theme'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Icon from 'react-native-vector-icons/AntDesign'
+import { useSelector } from 'react-redux';
 
 
-export default CustomButton = ({text, onChange, style={}, value, inputMode='text', secureTextEntry=false}) => {
+export default CustomButton = ({ text, onChange, style = {}, value, inputMode = 'text', secureTextEntry = false }) => {
 
   const [visible, setVisible] = useState(secureTextEntry);
-  
+
+  const darkMode = useSelector((state) => state.theme.darkMode)
+
   return (
-    <View style={[styles.container, style]}>
-      <TextInput 
-        secureTextEntry={secureTextEntry && visible} 
-        placeholder={text} 
-        placeholderTextColor={colors.text} 
-        onChangeText={onChange} value={value} 
-        style={[styles.TextInput, {width: secureTextEntry ? '80%' : '100%'}]} 
+    <View style={[styles.container, {backgroundColor: colors.input}, style]}>
+      <TextInput
+        secureTextEntry={secureTextEntry && visible}
+        placeholder={text}
+        placeholderTextColor={colors.textDark}
+        onChangeText={onChange} value={value}
+        style={[styles.TextInput, { width: secureTextEntry ? '80%' : '100%' }]}
         inputMode={inputMode}
       />
-      {secureTextEntry && 
-      <TouchableWithoutFeedback onPress={() => setVisible(!visible)} style={{padding: 10}} >
-        <Icon name={visible ? "eye" : "eyeo"} size={30} color={colors.text} />
-      </TouchableWithoutFeedback>}
+      {secureTextEntry &&
+        <TouchableWithoutFeedback onPress={() => setVisible(!visible)} style={{ padding: 10 }} >
+          <Icon name={visible ? "eye" : "eyeo"} size={30} color={colors.textLight} />
+        </TouchableWithoutFeedback>}
     </View>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    width: "80%",
+    width: "100%",
     height: 50,
     // marginTop: 20,
-    backgroundColor: 'white',
+    backgroundColor: colors.input,
     borderRadius: 10,
-    paddingHorizontal: 10, 
+    paddingHorizontal: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -41,6 +44,6 @@ const styles = StyleSheet.create({
   TextInput: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: colors.text,
+    color: colors.textDark,
   },
 })

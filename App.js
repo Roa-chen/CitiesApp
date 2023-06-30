@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, Appearance} from 'react-native';
 
 import Tabs from "./src/index";
 import Authentification from './src/authentification/Authentification';
 import WaitEmail from './src/authentification/SignIn/WaitEmail';
 
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, DarkTheme, DefaultTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import { Provider } from 'react-redux';
+import { Provider, connect } from 'react-redux';
 import store from './src/reducers/index'
 
 import auth from '@react-native-firebase/auth';
-import CustomButton from './src/components/CustomButton';
+import { setDarkMode } from './src/reducers/ThemeSlice';
 class App extends Component {
 
   state = {
@@ -23,13 +23,19 @@ class App extends Component {
   onAuthStateChange = (user) => {
     this.setState({user, initializing: false})
     if (!user) this.navigationRef.current.navigate('Authentification')
-    console.log('found user: ', user);
+    // console.log('found user: ', user);
   }
 
   subscriber = null;
 
   componentDidMount() {
     this.subscriber = auth().onAuthStateChanged(this.onAuthStateChange);
+    Appearance.addChangeListener((theme) => {
+      // this.props.setDarkMode(theme.colorScheme === 'dark')
+      this.props.setDarkMode(false)
+    })
+    // this.props.setDarkMode(Appearance.getColorScheme() === 'dark')
+    // console.log("darkMode : ", this.props.darkMode)
   }
 
   componentWillUnmount() {
@@ -48,17 +54,33 @@ class App extends Component {
       )
 
     return (
-      <Provider store={store}>
-        <NavigationContainer ref={this.navigationRef}>
-          <this.StackRoot.Navigator initialRouteName={(this.state.user && this.state.user.emailVerified) ? 'App' : 'Authentification'} screenOptions={{headerShown: false}}>
-            <this.StackRoot.Screen name="App" component={Tabs} />
-            <this.StackRoot.Screen name="Authentification" component={Authentification} />
-            <this.StackRoot.Screen name="WaitEmail" component={WaitEmail} />
-          </this.StackRoot.Navigator>
-        </NavigationContainer>
-      </Provider>
+      <NavigationContainer ref={this.navigationRef} theme={this.props.darkMode ? DarkTheme : DefaultTheme}>
+        <this.StackRoot.Navigator initialRouteName={(this.state.user && this.state.user.emailVerified) ? 'App' : 'Authentification'} screenOptions={{headerShown: false}}>
+          <this.StackRoot.Screen name="App" component={Tabs} />
+          <this.StackRoot.Screen name="Authentification" component={Authentification} />
+          <this.StackRoot.Screen name="WaitEmail" component={WaitEmail} />
+        </this.StackRoot.Navigator>
+      </NavigationContainer>
     )
   }
 }
 
-export default App
+const mapStateToProps = (state) => ({
+  darkMode: state.theme.darkMode,
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  setDarkMode: (payload) => dispatch(setDarkMode(payload))
+})
+
+const StoreApp = connect(mapStateToProps, mapDispatchToProps)(App)
+
+const ProviderApp = () => {
+  return (
+    <Provider store={store}>
+      <StoreApp />
+    </Provider>
+  )
+}
+
+export default ProviderApp

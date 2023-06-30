@@ -11,8 +11,10 @@ import {
 
 import CenterMessage from "../components/CenterMessage";
 import { colors } from "../theme";
+
 import { delCity, setCities } from "../reducers/CitiesSlice";
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
+import store from "../reducers/index" 
 
 class Cities extends React.Component {
 
@@ -36,7 +38,7 @@ class Cities extends React.Component {
 
   render() {
 
-    const {cities} = this.props.cities;
+    const { cities } = this.props.cities;
 
     return (
       <ScrollView contentContainerStyle={[!cities.length && { flex: 1 }]}>
@@ -48,8 +50,8 @@ class Cities extends React.Component {
                 <TouchableWithoutFeedback onPress={() => (this.navigate(item.id))} >
                   <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', }}>
                     <View style={{ width: '80%' }}>
-                      <Text numberOfLines={1} style={styles.city}>{item.city}</Text>
-                      <Text style={styles.country}>{item.country}</Text>
+                      <Text numberOfLines={1} style={[styles.city, {color: this.props.darkMode ? colors.textLight : colors.black}]}>{item.city}</Text>
+                      <Text style={[styles.country, {color: this.props.darkMode ? colors.textLightTranslucide : colors.blackTranslucide}]}>{item.country}</Text>
                     </View>
                     <View style={{ alignSelf: 'center' }}>
                       <TouchableWithoutFeedback onPress={() => this.props.delCity(item)}>
@@ -70,12 +72,13 @@ class Cities extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-    cities: state.cities,
+  cities: state.cities,
+  darkMode: state.theme.darkMode,
 })
 
 const mapDispatchToProps = (dispatch) => ({
   delCity: (city) => dispatch(delCity(city)),
-  setCities: () => dispatch(setCities())
+  setCities: () => dispatch(setCities()),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Cities);
@@ -89,10 +92,10 @@ styles = StyleSheet.create({
   },
   city: {
     fontSize: 20,
-    color: 'black'
+    color: store.getState().theme.darkMode ? colors.textLight : colors.black,
   },
   country: {
-    color: "rgba(0, 0, 0, .5)",
+    color: store.getState().theme.darkMode ? colors.textLightTranslucide : colors.blackTranslucide,
     maxWidth: '90%',
   },
   image: {

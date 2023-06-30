@@ -7,6 +7,18 @@ export default WaitEmail = ({navigation}) => {
 
   useEffect(() => {
     auth().currentUser.sendEmailVerification();
+    const unsubscribe = auth().onUserChanged(() => {
+      const unsubscribeInterval = setInterval(() => {
+        console.log('reload');
+        auth().currentUser.reload()
+        if (auth().currentUser.emailVerified) {
+          unsubscribe();
+          clearInterval(unsubscribeInterval);
+          navigation.navigate("App")
+        }
+      }, 1000);
+    })
+    return unsubscribe();
   }, [])
 
   const sendAgain = () => {
@@ -26,8 +38,10 @@ export default WaitEmail = ({navigation}) => {
 
   return(
     <View style={{flex: 1, alignItems: 'center'}}>
-      <CustomButton title="send again" onPress={sendAgain} style={{marginTop: 20}} />
-      <CustomButton title="done" onPress={handleDone} style={{marginTop: 20}} />
+      <View style={{width: '80%', alignItems: 'center'}}>
+        <CustomButton title="send again" onPress={sendAgain} style={{marginTop: 20}} />
+        <CustomButton title="done" onPress={handleDone} style={{marginTop: 20}} />
+      </View>
     </View>
   )
 }

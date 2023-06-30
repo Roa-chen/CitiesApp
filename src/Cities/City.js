@@ -14,7 +14,9 @@ import {
 import CenterMessage from "../components/CenterMessage";
 import { colors } from "../theme";
 import Icon from 'react-native-vector-icons/AntDesign';
+
 import { connect } from "react-redux";
+import store from "../reducers/index" 
 import { addLocation, delLocation } from "../reducers/CitiesSlice";
 
 class City extends React.Component {
@@ -76,8 +78,8 @@ class City extends React.Component {
               city.locations.map((location, index) => (
                 <View style={styles.locationContainer} key={index}>
                   <View style={{ width: '70%' }}>
-                    <Text numberOfLines={1} style={styles.locationName}>{location.name}</Text>
-                    <Text style={styles.locationInfo}>{location.info}</Text>
+                    <Text numberOfLines={1} style={[styles.locationName, {color: this.props.darkMode ? colors.textLight : colors.black}]}>{location.name}</Text>
+                    <Text style={[styles.locationInfo, {color: this.props.darkMode ? colors.textDarkTranslucide : colors.blackTranslucide}]}>{location.info}</Text>
                   </View>
                   <View style={{ alignSelf: 'center', flexDirection: 'row' }}>
                     <this.ButtonIcon name="sharealt" onPress={() => this.share(location)} />
@@ -116,7 +118,7 @@ class City extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const city = state.cities.cities.find(city => city.id === ownProps.route.params.cityId)
-  return {city}
+  return {city, darkMode: state.theme.darkMode}
 } 
 
 const mapDispatchToProps = (dispatch) => ({
@@ -175,10 +177,10 @@ const styles = StyleSheet.create({
   },
   locationName: {
     fontSize: 20,
-    color: 'black',
+    color: store.getState().theme.darkMode ? colors.textLight : colors.black,
   },
   locationInfo: {
-    color: 'rgba(0, 0, 0, .5)',
+    color: store.getState().theme.darkMode ? colors.textLightTranslucide : colors.blackTranslucide,
     maxWidth: '90%',
   },
   image: {
