@@ -1,13 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
 import { View, Dimensions, StyleSheet, Animated, Alert, Text, ScrollView, RefreshControl, ActivityIndicator } from "react-native"
 
-import { UseSelector, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 import auth, { firebase } from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+
 import CustomButton from "../components/CustomButton";
+import CustomTextInput from "../components/CustomTextInput";
 
 import { DefaultTheme, DarkTheme } from "@react-navigation/native";
-import CustomTextInput from "../components/CustomTextInput";
 import { colors } from "../theme";
 import { navigateToAuth, navigateToWaitEmail } from "../navigation";
 
@@ -90,9 +92,6 @@ export default ControlCenter = ({ navigation }) => {
 
     setEmailLoading(true)
 
-    // navigateToWaitEmail({updateEmail: true, email: emailText, password: passwordText})
-    // return
-
     reauthenticate(passwordText).catch(err => Alert.alert('Error', err));
 
     auth().currentUser.verifyBeforeUpdateEmail(emailText)
@@ -113,35 +112,29 @@ export default ControlCenter = ({ navigation }) => {
         console.error(error);
         setEmailLoading(false)
       });
+  }
 
+  const deleteAccount = () => {
+    Alert.alert(
+      'Delete Account?',
+      'Deleting your account is irreversible, all your information will become irretrievable!',
+      [
+        { text: "Keep", style: 'cancel', onPress: () => {} },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          // If the user confirmed, then we dispatch the action we blocked earlier
+          // This will continue the action that had triggered the removal of the screen
+          onPress: () => {
+            firestore().collection('Users').doc(auth().currentUser.uid).delete()
+            auth().currentUser.delete().then(console.log('deleted'));
+            navigateToAuth();
+          },
+        },
+      ]
+    );
 
-    // auth().signInWithEmailAndPassword(auth().currentUser.email, passwordText)
-    //   .then(info => {
-    //     auth().currentUser.verifyBeforeUpdateEmail(emailText)
-    //       .then(setEmailLoading(false))
-    //       .catch(error => {
-    //         if (error.code === 'auth/email-already-in-use') {
-    //           console.log('That email address is already in use!');
-    //         }
-
-    //         if (error.code === 'auth/invalid-email') {
-    //           console.log('That email address is invalid!');
-    //         }
-
-    //         Alert.alert('Error', error.toString())
-    //         console.error(error);
-    //         setEmailLoading(false)
-    //       });
-    //   })
-    //   .catch(err => {
-    //     console.log(err.code)
-    //     if (err.code == "auth/network-request-failed") {
-    //       Alert.alert('Error', "Please verify your network and try again.")
-    //     } else {
-    //       Alert.alert('Error', err.toString())
-    //     }
-    //     setEmailLoading(false)
-    //   })
+    
   }
 
   return (
@@ -165,6 +158,8 @@ export default ControlCenter = ({ navigation }) => {
             </View>
           </Animated.View>
         </Animated.View>
+        {/* Delete Account Part */}
+        <CustomButton title="Delete Account" onPress={deleteAccount} style={{ marginTop: 20 }} />
       </View>
     </ScrollView>
   )
