@@ -41,8 +41,8 @@ export default ControlCenter = ({ navigation }) => {
   }
 
   const [showEmail, setShowEmail] = useState(false);
-  const [emailText, setEmailText] = useState('arsenechardon14@gmail.com');
-  const [passwordText, setPasswordText] = useState('password');
+  const [emailText, setEmailText] = useState('');
+  const [passwordText, setPasswordText] = useState('');
   const [emailLoading, setEmailLoading] = useState(false)
 
   const logOut = () => {

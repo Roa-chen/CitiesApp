@@ -6,15 +6,23 @@ import auth from '@react-native-firebase/auth';
 import CustomTextInput from "../../components/CustomTextInput";
 import CustomButton from "../../components/CustomButton";
 import { navigateToApp, navigateToWaitEmail } from "../../navigation";
+import { createUserCloud } from "../../cloud";
 
 export default LogIn = ({navigation}) => {
 
   const [isLoading, setLoading] = useState(false)
 
-  const [emailText, setEmailText] = useState("");
-  const [passwordText, setPasswordText] = useState("");
+  const [emailText, setEmailText] = useState("arsenechardon14@gmail.com");
+  const [passwordText, setPasswordText] = useState("password");
 
   const singIn = () => {
+    auth().signInWithEmailAndPassword(emailText, passwordText).then(() => {
+      createUserCloud().then(() => {
+        navigateToApp();
+      });
+    });
+
+    return
     if (emailText == '' || passwordText == '') {
       Alert.alert('Error', 'You must enter your informations before logging in.')
     } else {

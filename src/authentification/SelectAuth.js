@@ -13,8 +13,8 @@ export default LogIn = (props) => {
 
   const {navigation, routes} = props;
 
-  const [emailText, setEmailText] = useState("arsepbelle@gmail.com");
-  const [passwordText, setPasswordText] = useState("password");
+  const [emailText, setEmailText] = useState("");
+  const [passwordText, setPasswordText] = useState("");
 
   const [isLoading, setLoading] = useState(false)
 
