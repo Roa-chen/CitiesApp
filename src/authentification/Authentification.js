@@ -21,6 +21,7 @@ export default Authentification = () => {
     }}>
       <stack.Screen name="SelectAuth" component={SelectAuth} />
       <stack.Screen name="SignIn" component={SignIn} />
+      <stack.Screen name="WaitEmail" component={WaitEmail} />
     </stack.Navigator>
   )
 }

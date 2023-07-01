@@ -25,7 +25,6 @@ class App extends Component {
   onAuthStateChange = (user) => {
     this.setState({user, initializing: false})
     if (!user && !isOnAuth()) navigateToAuth();
-    // console.log('found user: ', user);
   }
 
   subscriber = null;
@@ -58,7 +57,6 @@ class App extends Component {
         <this.StackRoot.Navigator initialRouteName={(this.state.user && this.state.user.emailVerified) ? 'App' : 'Authentification'} screenOptions={{headerShown: false}}>
           <this.StackRoot.Screen name="App" component={Tabs} />
           <this.StackRoot.Screen name="Authentification" component={Authentification} initialParams={{move: this.resetRootFunc}}/>
-          <this.StackRoot.Screen name="WaitEmail" component={WaitEmail} />
         </this.StackRoot.Navigator>
       </NavigationContainer>
     )

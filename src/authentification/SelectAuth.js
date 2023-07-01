@@ -7,14 +7,14 @@ import { colors } from "../theme";
 
 import auth from '@react-native-firebase/auth';
 import LinearGradient from "react-native-linear-gradient";
-import { isOnAuth, navigateToApp } from "../navigation";
+import { isOnAuth, navigateToApp, navigateToWaitEmail } from "../navigation";
 
 export default LogIn = (props) => {
 
   const {navigation, routes} = props;
 
-  const [emailText, setEmailText] = useState("");
-  const [passwordText, setPasswordText] = useState("");
+  const [emailText, setEmailText] = useState("arsepbelle@gmail.com");
+  const [passwordText, setPasswordText] = useState("password");
 
   const [isLoading, setLoading] = useState(false)
 
@@ -35,7 +35,7 @@ export default LogIn = (props) => {
             setPasswordText('')
             navigateToApp()
           } else {
-            navigation.navigate("WaitEmail")
+            navigateToWaitEmail()
           }
         })
         .catch(err => {

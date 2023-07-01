@@ -16,6 +16,16 @@ export const navigateToAuth = () => {
   })
 }
 
+export const navigateToWaitEmail = (params) => {
+
+
+
+  navigationRef.current.resetRoot({
+    index: 1,
+    routes: [{name: "Authentification"}, {name: "Authentification", state: {routes: [{name: "WaitEmail", params: {updateEmail: false, ...params}}]}}]
+  })
+}
+
 export const isOnAuth = () => {
   if (navigationRef.current?.getState()) {
     return (navigationRef.current?.getState().routes[0].name === "Authentification")

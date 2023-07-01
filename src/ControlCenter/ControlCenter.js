@@ -3,13 +3,13 @@ import { View, Dimensions, StyleSheet, Animated, Alert, Text, ScrollView, Refres
 
 import { UseSelector, useSelector } from "react-redux";
 
-import auth from '@react-native-firebase/auth';
+import auth, { firebase } from '@react-native-firebase/auth';
 import CustomButton from "../components/CustomButton";
 
 import { DefaultTheme, DarkTheme } from "@react-navigation/native";
 import CustomTextInput from "../components/CustomTextInput";
 import { colors } from "../theme";
-import { navigateToAuth } from "../navigation";
+import { navigateToAuth, navigateToWaitEmail } from "../navigation";
 
 const ButtonWidth = Dimensions.get("screen").width * 80 / 100
 
@@ -41,8 +41,8 @@ export default ControlCenter = ({ navigation }) => {
   }
 
   const [showEmail, setShowEmail] = useState(false);
-  const [emailText, setEmailText] = useState('');
-  const [passwordText, setPasswordText] = useState('');
+  const [emailText, setEmailText] = useState('arsenechardon14@gmail.com');
+  const [passwordText, setPasswordText] = useState('password');
   const [emailLoading, setEmailLoading] = useState(false)
 
   const logOut = () => {
@@ -73,6 +73,12 @@ export default ControlCenter = ({ navigation }) => {
     setShowEmail(!showEmail)
   }
 
+  const reauthenticate = (password) => {
+    const user = auth().currentUser
+    const cred = firebase.auth.EmailAuthProvider.credential(user.email, password);
+    return user.reauthenticateWithCredential(cred);
+  }
+
   const handleEmailChange = () => {
     if (emailText == '' || passwordText == '') {
       Alert.alert('Error', 'You must enter your informations before logging in.')
@@ -83,33 +89,59 @@ export default ControlCenter = ({ navigation }) => {
     console.log('changing email');
 
     setEmailLoading(true)
-    auth().signInWithEmailAndPassword(auth().currentUser.email, passwordText)
-      .then(info => {
-        auth().currentUser.verifyBeforeUpdateEmail(emailText)
-          .then(setEmailLoading(false))
-          .catch(error => {
-            if (error.code === 'auth/email-already-in-use') {
-              console.log('That email address is already in use!');
-            }
 
-            if (error.code === 'auth/invalid-email') {
-              console.log('That email address is invalid!');
-            }
+    // navigateToWaitEmail({updateEmail: true, email: emailText, password: passwordText})
+    // return
 
-            Alert.alert('Error', error.toString())
-            console.error(error);
-            setEmailLoading(false)
-          });
-      })
-      .catch(err => {
-        console.log(err.code)
-        if (err.code == "auth/network-request-failed") {
-          Alert.alert('Error', "Please verify your network and try again.")
-        } else {
-          Alert.alert('Error', err.toString())
-        }
+    reauthenticate(passwordText).catch(err => Alert.alert('Error', err));
+
+    auth().currentUser.verifyBeforeUpdateEmail(emailText)
+      .then(() => {
         setEmailLoading(false)
+        navigateToWaitEmail({updateEmail: true, email: emailText, password: passwordText})
       })
+      .catch(error => {
+        if (error.code === 'auth/email-already-in-use') {
+          console.log('That email address is already in use!');
+        }
+
+        if (error.code === 'auth/invalid-email') {
+          console.log('That email address is invalid!');
+        }
+
+        Alert.alert('Error', error.toString())
+        console.error(error);
+        setEmailLoading(false)
+      });
+
+
+    // auth().signInWithEmailAndPassword(auth().currentUser.email, passwordText)
+    //   .then(info => {
+    //     auth().currentUser.verifyBeforeUpdateEmail(emailText)
+    //       .then(setEmailLoading(false))
+    //       .catch(error => {
+    //         if (error.code === 'auth/email-already-in-use') {
+    //           console.log('That email address is already in use!');
+    //         }
+
+    //         if (error.code === 'auth/invalid-email') {
+    //           console.log('That email address is invalid!');
+    //         }
+
+    //         Alert.alert('Error', error.toString())
+    //         console.error(error);
+    //         setEmailLoading(false)
+    //       });
+    //   })
+    //   .catch(err => {
+    //     console.log(err.code)
+    //     if (err.code == "auth/network-request-failed") {
+    //       Alert.alert('Error', "Please verify your network and try again.")
+    //     } else {
+    //       Alert.alert('Error', err.toString())
+    //     }
+    //     setEmailLoading(false)
+    //   })
   }
 
   return (

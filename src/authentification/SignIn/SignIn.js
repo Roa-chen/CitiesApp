@@ -5,7 +5,7 @@ import auth from '@react-native-firebase/auth';
 
 import CustomTextInput from "../../components/CustomTextInput";
 import CustomButton from "../../components/CustomButton";
-import { navigateToApp } from "../../navigation";
+import { navigateToApp, navigateToWaitEmail } from "../../navigation";
 
 export default LogIn = ({navigation}) => {
 
@@ -28,7 +28,7 @@ export default LogIn = ({navigation}) => {
             navigateToApp()
           } else {
             setLoading(false)
-            navigation.navigate("WaitEmail")
+            navigateToWaitEmail()
           }
         })
         .catch(error => {
