@@ -1,3 +1,4 @@
+import React from 'react';
 import CitiesSlice from './CitiesSlice';
 import { configureStore } from '@reduxjs/toolkit';
 import ThemeSlice from './ThemeSlice';

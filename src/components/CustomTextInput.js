@@ -1,6 +1,6 @@
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, TextInput, TouchableWithoutFeedback } from 'react-native'
 import { colors } from '../theme'
-import { useEffect, useState } from 'react';
 import Icon from 'react-native-vector-icons/AntDesign'
 import { useSelector } from 'react-redux';
 

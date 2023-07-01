@@ -1,3 +1,4 @@
+import React from 'react'
 import store from './reducers/index'
 
 const colors = !store.getState().theme.darkMode ? {
