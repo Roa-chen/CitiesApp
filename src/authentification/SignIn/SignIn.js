@@ -12,17 +12,10 @@ export default LogIn = ({navigation}) => {
 
   const [isLoading, setLoading] = useState(false)
 
-  const [emailText, setEmailText] = useState("arsenechardon14@gmail.com");
-  const [passwordText, setPasswordText] = useState("password");
+  const [emailText, setEmailText] = useState("");
+  const [passwordText, setPasswordText] = useState("");
 
   const singIn = () => {
-    auth().signInWithEmailAndPassword(emailText, passwordText).then(() => {
-      createUserCloud().then(() => {
-        navigateToApp();
-      });
-    });
-
-    return
     if (emailText == '' || passwordText == '') {
       Alert.alert('Error', 'You must enter your informations before logging in.')
     } else {
@@ -33,7 +26,9 @@ export default LogIn = ({navigation}) => {
             setEmailText('')
             setPasswordText('')
             setLoading(false)
-            navigateToApp()
+            createUserCloud().then(() => {
+              navigateToApp();
+            });
           } else {
             setLoading(false)
             navigateToWaitEmail()

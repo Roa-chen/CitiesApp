@@ -5,8 +5,6 @@ import { v4 as uuidV4 } from 'uuid';
 export const createUserCloud = async () => {
   const userRef = await firestore().collection("Users").doc(auth().currentUser.uid).set({userName: auth().currentUser.displayName})
 
-  // const userId = userRef.id;
-
   const city = {
     city: 'Your first City',
     country: 'The Country displays here',
@@ -19,7 +17,7 @@ export const createUserCloud = async () => {
     ]
   }
 
-  const cityRef = await firestore().collection("Users").doc(auth().currentUser.uid).collection('cities').add({city: city})
+  const cityRef = await firestore().collection("Users").doc(auth().currentUser.uid).collection('Cities').doc(city.id).set(city)
 
   return cityRef;
 }

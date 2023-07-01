@@ -12,14 +12,39 @@ import {
 import CenterMessage from "../components/CenterMessage";
 import { colors } from "../theme";
 
-import { delCity, setCities } from "../reducers/CitiesSlice";
+import { delCity, setCities, updateCities } from "../reducers/CitiesSlice";
 import { connect } from 'react-redux';
 import store from "../reducers/index" 
 
+import auth from '@react-native-firebase/auth'
+import firestore from '@react-native-firebase/firestore'
+
 class Cities extends React.Component {
 
+  unsubscribeSnapchot = null;
+
   componentDidMount() {
-    this.props.setCities()
+
+    const userUid = auth().currentUser.uid
+
+    unsubscribeSnapchot = firestore().collection(`Users/${userUid}/Cities`).onSnapshot((querySnap) => {
+      const cities = []
+      querySnap.forEach(doc => {
+        const data = doc.data()
+        // if (!data.loactions) {
+        //   data.locations = []
+        // }
+        cities.push(data)
+      })
+      console.log('updateCities: ', cities)
+      this.props.updateCities(cities);
+    }, () => {
+
+    })
+  }
+
+  componentWillUnmount() {
+    unsubscribeSnapchot();
   }
 
   static navigationOptions =
@@ -78,6 +103,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   delCity: (city) => dispatch(delCity(city)),
+  updateCities: (cities) => dispatch(updateCities(cities)),
   setCities: () => dispatch(setCities()),
 })
 

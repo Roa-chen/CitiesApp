@@ -3,6 +3,7 @@ import { View, Alert } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import CustomButton from '../../components/CustomButton';
 import { navigateToApp } from '../../navigation';
+import { createUserCloud } from '../../cloud';
 
 export default WaitEmail = (props) => {
 
@@ -11,6 +12,8 @@ export default WaitEmail = (props) => {
   const {updateEmail} = params;
 
   useEffect(() => {
+
+    console.log('Waiting Email. updateEmail : ', updateEmail)
 
     let foundUser = false;
 
@@ -43,20 +46,38 @@ export default WaitEmail = (props) => {
     })
 
     if (!updateEmail) {
-      auth().currentUser.sendEmailVerification();
-      const unsubscribe = auth().onUserChanged(() => {
-        const unsubscribeInterval = setInterval(() => {
-          console.log('reload');
-          auth().currentUser.reload()
+      auth().currentUser.sendEmailVerification().then(() => {
+        const unsubscribe = auth().onUserChanged(() => {
+  
+          const unsubscribeInterval = setInterval(() => {
+            if (foundUser) {
+              console.log('clear : ', unsubscribeInterval)
+              clearInterval(unsubscribeInterval)
+            }
+            console.log('reload')
+            auth().currentUser.reload()
+          }, 10000);
+          console.log("interval: ", unsubscribeInterval)
           if (auth().currentUser.emailVerified) {
-            foundUser = true;
-            unsubscribe();
+            
+            console.log("clear: ", unsubscribeInterval)
             clearInterval(unsubscribeInterval);
-            navigateToApp()
+  
+            if (!foundUser){
+              createUserCloud().then(() => {
+                foundUser = true;
+                clearInterval(unsubscribeInterval);
+                navigateToApp();
+              });
+            } else {
+              clearInterval(unsubscribeInterval);
+            }
+            return unsubscribe();
           }
-        }, 5000);
-      })
-      return () => {unsubscribe(); clearInterval(unsubscribeInterval)};
+  
+  
+        })
+      });
     } else {
       const unsubscribeInterval = setInterval(() => {
         auth().signInWithEmailAndPassword(params.email, params.password).then(() => {
@@ -67,15 +88,9 @@ export default WaitEmail = (props) => {
         }).catch(err => {
           console.log('waiting')
         })
-
       }, 5000);
+      return clearInterval(unsubscribeInterval);
     }
-
-    // console.log('test')
-    // return () => {
-    //   unsubscribe();
-    //   clearInterval(unsubscribeInterval);
-    // }
   }, [])
 
   const sendAgain = () => {
