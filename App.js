@@ -7,12 +7,14 @@ import WaitEmail from './src/authentification/SignIn/WaitEmail';
 
 import { NavigationContainer, DarkTheme, DefaultTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { isOnAuth, navigateToAuth, navigationRef } from './src/navigation';
 
 import { Provider, connect } from 'react-redux';
 import store from './src/reducers/index'
 
 import auth from '@react-native-firebase/auth';
 import { setDarkMode } from './src/reducers/ThemeSlice';
+
 class App extends Component {
 
   state = {
@@ -22,7 +24,7 @@ class App extends Component {
 
   onAuthStateChange = (user) => {
     this.setState({user, initializing: false})
-    if (!user) this.navigationRef.current.navigate('Authentification')
+    if (!user && !isOnAuth()) navigateToAuth();
     // console.log('found user: ', user);
   }
 
@@ -35,14 +37,12 @@ class App extends Component {
       this.props.setDarkMode(false)
     })
     // this.props.setDarkMode(Appearance.getColorScheme() === 'dark')
-    // console.log("darkMode : ", this.props.darkMode)
   }
 
   componentWillUnmount() {
     this.subscriber();
   }
 
-  navigationRef = React.createRef()
   StackRoot = createStackNavigator();
 
   render() {
@@ -54,10 +54,10 @@ class App extends Component {
       )
 
     return (
-      <NavigationContainer ref={this.navigationRef} theme={this.props.darkMode ? DarkTheme : DefaultTheme}>
+      <NavigationContainer ref={navigationRef} theme={this.props.darkMode ? DarkTheme : DefaultTheme}>
         <this.StackRoot.Navigator initialRouteName={(this.state.user && this.state.user.emailVerified) ? 'App' : 'Authentification'} screenOptions={{headerShown: false}}>
           <this.StackRoot.Screen name="App" component={Tabs} />
-          <this.StackRoot.Screen name="Authentification" component={Authentification} />
+          <this.StackRoot.Screen name="Authentification" component={Authentification} initialParams={{move: this.resetRootFunc}}/>
           <this.StackRoot.Screen name="WaitEmail" component={WaitEmail} />
         </this.StackRoot.Navigator>
       </NavigationContainer>

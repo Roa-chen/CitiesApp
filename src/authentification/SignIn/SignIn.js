@@ -5,6 +5,7 @@ import auth from '@react-native-firebase/auth';
 
 import CustomTextInput from "../../components/CustomTextInput";
 import CustomButton from "../../components/CustomButton";
+import { navigateToApp } from "../../navigation";
 
 export default LogIn = ({navigation}) => {
 
@@ -24,7 +25,7 @@ export default LogIn = ({navigation}) => {
             setEmailText('')
             setPasswordText('')
             setLoading(false)
-            navigation.navigate("App")
+            navigateToApp()
           } else {
             setLoading(false)
             navigation.navigate("WaitEmail")

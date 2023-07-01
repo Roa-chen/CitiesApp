@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { View } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import CustomButton from '../../components/CustomButton';
+import { navigateToApp } from '../../navigation';
 
 export default WaitEmail = ({navigation}) => {
 
@@ -14,7 +15,7 @@ export default WaitEmail = ({navigation}) => {
         if (auth().currentUser.emailVerified) {
           unsubscribe();
           clearInterval(unsubscribeInterval);
-          navigation.navigate("App")
+          navigateToApp()
         }
       }, 1000);
     })
@@ -30,7 +31,7 @@ export default WaitEmail = ({navigation}) => {
         const user = auth().currentUser;
         console.log(user)
         if (user.emailVerified) {
-          navigation.navigate("App")
+          navigateToApp()
         }
     })
     

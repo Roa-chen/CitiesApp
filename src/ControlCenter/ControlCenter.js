@@ -9,6 +9,7 @@ import CustomButton from "../components/CustomButton";
 import { DefaultTheme, DarkTheme } from "@react-navigation/native";
 import CustomTextInput from "../components/CustomTextInput";
 import { colors } from "../theme";
+import { navigateToAuth } from "../navigation";
 
 const ButtonWidth = Dimensions.get("screen").width * 80 / 100
 
@@ -46,7 +47,7 @@ export default ControlCenter = ({ navigation }) => {
 
   const logOut = () => {
     auth().signOut();
-    navigation.navigate("Authentification");
+    navigateToAuth()
   }
 
   const emailPaddingValue = useRef(new Animated.Value(10)).current;
