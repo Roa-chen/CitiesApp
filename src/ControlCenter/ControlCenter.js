@@ -19,6 +19,8 @@ export default ControlCenter = ({ navigation }) => {
 
   const darkMode = useSelector((state) => state.theme.darkMode)
 
+
+
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       if (showEmail) {
@@ -26,8 +28,15 @@ export default ControlCenter = ({ navigation }) => {
         emailPaddingValue.setValue(10);
       }
     })
-    return unsubscribe();
-  })
+
+    const unsubscribeUser = auth().onUserChanged((user) => {
+      console.log('changed')
+    })
+    return () => {
+      unsubscribe();
+      unsubscribeUser();
+    }
+  }, [])
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -97,7 +106,7 @@ export default ControlCenter = ({ navigation }) => {
     auth().currentUser.verifyBeforeUpdateEmail(emailText)
       .then(() => {
         setEmailLoading(false)
-        navigateToWaitEmail({updateEmail: true, email: emailText, password: passwordText})
+        navigateToWaitEmail({ updateEmail: true, email: emailText, password: passwordText })
       })
       .catch(error => {
         if (error.code === 'auth/email-already-in-use') {
@@ -119,7 +128,7 @@ export default ControlCenter = ({ navigation }) => {
       'Delete Account?',
       'Deleting your account is irreversible, all your information will become irretrievable!',
       [
-        { text: "Keep", style: 'cancel', onPress: () => {} },
+        { text: "Keep", style: 'cancel', onPress: () => { } },
         {
           text: 'Delete',
           style: 'destructive',
@@ -133,17 +142,50 @@ export default ControlCenter = ({ navigation }) => {
         },
       ]
     );
+  }
 
-    
+  const [showDisplayName, setShowDisplayName] = useState(false);
+  const [displayName, setDisplayName] = useState('');
+
+  const displayNamePaddingValue = useRef(new Animated.Value(10)).current;
+  const displayNameElevationValue = displayNamePaddingValue.interpolate({
+    inputRange: [10, 150],
+    outputRange: [0, 20]
+  })
+  // const displayNameEntryPosition = displayNamePaddingValue.interpolate({
+  //   inputRange: [10, 150],
+  //   outputRange: [10, 80]
+  // })
+
+  const displayNameAnimationOpen = () => {
+    Animated.timing(displayNamePaddingValue, { toValue: 80, duration: 100, useNativeDriver: false }).start()
+    setShowDisplayName(!showDisplayName)
+  }
+  const displayNameAnimationClose = () => {
+    Animated.timing(displayNamePaddingValue, { toValue: 10, duration: 100, useNativeDriver: false }).start()
+    setShowDisplayName(!showDisplayName)
+  }
+
+
+  const updateDisplayName = () => {
+    auth().currentUser.updateProfile({ displayName: displayName })
+      .catch(
+        err => {
+          Alert.alert('Error', err)
+        }
+      );
+    displayNameAnimationClose();
+    setDisplayName('');
   }
 
   return (
     <ScrollView contentContainerStyle={styles.container} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
-      <View style={{width: '80%', alignItems: 'center'}}>
+      <View style={{ width: '80%', alignItems: 'center' }}>
         {/* Log out Part */}
         <CustomButton title="Log Out" onPress={logOut} style={{ marginTop: 20 }} />
-        {/* Email Text */}
-        <Text style={styles.displayText} >email : {"\n"}{auth().currentUser.email}</Text>
+        {/* Info Text */}
+        <Text style={styles.displayText} >Email : {"\n"}{auth().currentUser.email}</Text>
+        <Text style={styles.displayText} >Name : {"\n"}{auth().currentUser.displayName}</Text>
         {/* Change Email Part */}
         <Animated.View style={[styles.detailContainer, { paddingBottom: emailPaddingValue, elevation: emailElevationValue, backgroundColor: (darkMode ? DarkTheme : DefaultTheme).colors.background }]}>
           <CustomButton title="Change Email" onPress={!showEmail ? emailAnimationOpen : emailAnimationClose} style={{ width: ButtonWidth, zIndex: 2 }} />
@@ -160,6 +202,14 @@ export default ControlCenter = ({ navigation }) => {
         </Animated.View>
         {/* Delete Account Part */}
         <CustomButton title="Delete Account" onPress={deleteAccount} style={{ marginTop: 20 }} />
+        {/* Change Display Name Part */}
+        <Animated.View style={[styles.detailContainer, { paddingBottom: displayNamePaddingValue, elevation: displayNameElevationValue, backgroundColor: (darkMode ? DarkTheme : DefaultTheme).colors.background }]}>
+          <CustomButton title="Change Name" onPress={!showDisplayName ? displayNameAnimationOpen : displayNameAnimationClose} style={{ width: ButtonWidth, zIndex: 2 }} />
+          <Animated.View style={{ width: ButtonWidth, position: 'absolute', top: displayNamePaddingValue, flexDirection: "row", justifyContent: 'space-between' }}>
+            <CustomTextInput text="new Name..." style={{ width: '70%' }} inputMode="text" value={displayName} onChange={setDisplayName} />
+            <CustomButton title="change" style={{ width: '25%' }} onPress={updateDisplayName} />
+          </Animated.View>
+        </Animated.View>
       </View>
     </ScrollView>
   )
@@ -180,7 +230,7 @@ const styles = StyleSheet.create({
   },
   displayText: {
     color: colors.textLight,
-    // alignSelf: "flex-start",
+    alignSelf: "flex-start",
     fontSize: 20,
     marginTop: 20,
     fontWeight: 'bold',

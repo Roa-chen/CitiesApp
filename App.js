@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {View, Text, Appearance} from 'react-native';
+import {View, Text, Appearance, DevSettings} from 'react-native';
 
 import Tabs from "./src/index";
 import Authentification from './src/authentification/Authentification';
@@ -31,11 +31,15 @@ class App extends Component {
 
   componentDidMount() {
     this.subscriber = auth().onAuthStateChanged(this.onAuthStateChange);
+    // this.props.setDarkMode(Appearance.getColorScheme() === 'dark')
     Appearance.addChangeListener((theme) => {
       // this.props.setDarkMode(theme.colorScheme === 'dark')
       this.props.setDarkMode(false)
     })
-    // this.props.setDarkMode(Appearance.getColorScheme() === 'dark')
+    DevSettings.addMenuItem('Display User', () => {
+      console.log(auth().currentUser.toJSON())
+    })
+
   }
 
   componentWillUnmount() {
