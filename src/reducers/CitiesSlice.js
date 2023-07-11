@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit"
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
+import { addCityToFirestore, addLocationToFirestore, delCityToFirestore, delLocationToFirestore } from '../services/firestore';
 
 const key = 'state';
 
@@ -41,43 +42,30 @@ const citiesSlice = createSlice({
   }
 })
 
-export const addCity = payload => (dispatch, state) => {
+export const addCity = payload => (dispatch) => {
   dispatch(addCityToState(payload))
-  AsyncStorage.setItem(key, JSON.stringify(state().cities))
-    .catch(e => console.log('error : ', e))
-  const userUid = auth().currentUser.uid;
-  firestore().doc(`Users/${userUid}/Cities/${payload.id}`).set(payload)
+  addCityToFirestore(payload)
 }
-export const delCity = payload => (dispatch, state) => {
+
+export const delCity = payload => (dispatch) => {
   dispatch(delCityToState(payload))
-  AsyncStorage.setItem(key, JSON.stringify(state().cities))
-    .catch(e => console.log('error : ', e))
-  const userUid = auth().currentUser.uid
-  firestore().doc(`Users/${userUid}/Cities/${payload.id}`).delete()
+  delCityToFirestore(payload)
 }
-export const addLocation = payload => (dispatch, state) => {
+
+export const addLocation = payload => (dispatch) => {
   dispatch(addLocationToState(payload))
-  AsyncStorage.setItem(key, JSON.stringify(state().cities))
-    .catch(e => console.log('error : ', e))
-  const userUid = auth().currentUser.uid
-  firestore().doc(`Users/${userUid}/Cities/${payload.city.id}`).update({locations: firestore.FieldValue.arrayUnion(payload.location)})
+  addLocationToFirestore(payload.city, payload.location)
 }
-export const delLocation = payload => (dispatch, state) => {
-  console.log(payload)
+
+export const delLocation = payload => (dispatch) => {
   dispatch(delLocationToState(payload))
-  AsyncStorage.setItem(key, JSON.stringify(state().cities))
-  .catch(e => console.log('error : ', e))
-  const userUid = auth().currentUser.uid
-  firestore().doc(`Users/${userUid}/Cities/${payload.city.id}`).update({locations: firestore.FieldValue.arrayRemove(payload.location)})
+  delLocationToFirestore(payload.city, payload.location)
 }
-export const setCities = () => async dispatch => {
-  let cities = await AsyncStorage.getItem(key)
-  cities = JSON.parse(cities)
-  dispatch(setCitiesToState(cities.cities))
-}
+
 export const updateCities = payload => (dispatch) => {
   dispatch(updateCitiesToState(payload))
 }
 
-const {addCityToState, delCityToState, addLocationToState, delLocationToState, setCitiesToState, updateCitiesToState} = citiesSlice.actions
+const {addCityToState, delCityToState, addLocationToState, delLocationToState, updateCitiesToState} = citiesSlice.actions
+
 export default citiesSlice.reducer;

@@ -3,12 +3,12 @@ import { View, Alert, StyleSheet } from "react-native"
 
 import auth from '@react-native-firebase/auth';
 
-import CustomTextInput from "../../components/CustomTextInput";
-import CustomButton from "../../components/CustomButton";
+import CustomTextInput from "../../components/general/CustomTextInput";
+import CustomButton from "../../components/general/CustomButton";
 import { navigateToApp, navigateToWaitEmail } from "../../navigation";
-import { createUserCloud } from "../../cloud";
+import { createUserCloud } from "../../services/firestore";
 
-export default LogIn = ({navigation}) => {
+export default LogIn = ({ navigation }) => {
 
   const [isLoading, setLoading] = useState(false)
 
@@ -47,15 +47,15 @@ export default LogIn = ({navigation}) => {
           console.error(error);
           setLoading(false)
         });
-    }    
+    }
   }
 
   return (
-    <View style={{flex: 1, alignItems: 'center'}}>
+    <View style={{ flex: 1, alignItems: 'center' }}>
       <View style={styles.container}>
-        <CustomTextInput text="email..." onChange={setEmailText} value={emailText} inputMode="email" style={{marginTop: 20}} />
-        <CustomTextInput text="password..." onChange={setPasswordText} value={passwordText} inputMode="none" secureTextEntry style={{marginTop: 20}} />
-        <CustomButton title="Sign In" onPress={singIn} style={{marginTop: 20}} isLoading={isLoading} />
+        <CustomTextInput text="email..." onChange={setEmailText} value={emailText} inputMode="email" style={{ marginTop: 20 }} />
+        <CustomTextInput text="password..." onChange={setPasswordText} value={passwordText} inputMode="none" secureTextEntry style={{ marginTop: 20 }} />
+        <CustomButton title="Sign In" onPress={singIn} style={{ marginTop: 20 }} isLoading={isLoading} />
       </View>
     </View>
   )

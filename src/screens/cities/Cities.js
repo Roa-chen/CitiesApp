@@ -9,12 +9,12 @@ import {
   Image
 } from "react-native";
 
-import CenterMessage from "../components/CenterMessage";
-import { colors } from "../theme";
+import CenterMessage from "../../components/cities/CenterMessage";
+import { colors } from "../../theme";
 
-import { delCity, setCities, updateCities } from "../reducers/CitiesSlice";
+import { delCity, setCities, updateCities } from "../../reducers/CitiesSlice";
 import { connect } from 'react-redux';
-import store from "../reducers/index" 
+import store from "../../reducers/index"
 
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
@@ -75,8 +75,8 @@ class Cities extends React.Component {
                 <TouchableWithoutFeedback onPress={() => (this.navigate(item.id))} >
                   <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', }}>
                     <View style={{ width: '80%' }}>
-                      <Text numberOfLines={1} style={[styles.city, {color: this.props.darkMode ? colors.textLight : colors.black}]}>{item.city}</Text>
-                      <Text style={[styles.country, {color: this.props.darkMode ? colors.textLightTranslucide : colors.blackTranslucide}]}>{item.country}</Text>
+                      <Text numberOfLines={1} style={[styles.city, { color: this.props.darkMode ? colors.textLight : colors.black }]}>{item.city}</Text>
+                      <Text style={[styles.country, { color: this.props.darkMode ? colors.textLightTranslucide : colors.blackTranslucide }]}>{item.country}</Text>
                     </View>
                     <View style={{ alignSelf: 'center' }}>
                       <TouchableWithoutFeedback onPress={() => this.props.delCity(item)}>

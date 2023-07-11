@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import { View, Text, Alert, StyleSheet, ActivityIndicator } from "react-native"
 
-import CustomButton from "../components/CustomButton"
-import CustomTextInput from "../components/CustomTextInput";
-import { colors } from "../theme";
+import CustomButton from "../../components/general/CustomButton"
+import CustomTextInput from "../../components/general/CustomTextInput";
+import { colors } from "../../theme";
 
 import auth from '@react-native-firebase/auth';
 import LinearGradient from "react-native-linear-gradient";
-import { isOnAuth, navigateToApp, navigateToWaitEmail } from "../navigation";
+import { isInAuth, navigateToApp, navigateToWaitEmail } from "../../navigation";
 
 export default LogIn = (props) => {
 
-  const {navigation, routes} = props;
+  const { navigation, routes } = props;
 
   const [emailText, setEmailText] = useState("");
   const [passwordText, setPasswordText] = useState("");

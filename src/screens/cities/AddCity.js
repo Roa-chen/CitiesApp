@@ -12,14 +12,14 @@ import {
 
 import 'react-native-get-random-values'
 import { v4 as uuidV4 } from 'uuid';
-import { colors } from '../theme';
+import { colors } from '../../theme';
 import LinearGradient from 'react-native-linear-gradient';
 import Geolocation from 'react-native-geolocation-service';
 
 import { connect } from 'react-redux';
-import { addCity } from '../reducers/CitiesSlice';
-import CustomTextInput from '../components/CustomTextInput';
-import CustomButton from '../components/CustomButton';
+import { addCity } from '../../reducers/CitiesSlice';
+import CustomTextInput from '../../components/general/CustomTextInput';
+import CustomButton from '../../components/general/CustomButton';
 
 class AddCity extends React.Component {
 

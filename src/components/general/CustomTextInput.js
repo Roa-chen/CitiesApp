@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, TextInput, TouchableWithoutFeedback } from 'react-native'
-import { colors } from '../theme'
+import { colors } from '../../theme'
 import Icon from 'react-native-vector-icons/AntDesign'
 import { useSelector } from 'react-redux';
 
@@ -12,7 +12,7 @@ export default CustomButton = ({ text, onChange, style = {}, value, inputMode = 
   const darkMode = useSelector((state) => state.theme.darkMode)
 
   return (
-    <View style={[styles.container, {backgroundColor: colors.input}, style]}>
+    <View style={[styles.container, { backgroundColor: colors.input }, style]}>
       <TextInput
         secureTextEntry={secureTextEntry && visible}
         placeholder={text}

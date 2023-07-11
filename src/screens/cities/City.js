@@ -11,13 +11,13 @@ import {
   Share,
 } from "react-native";
 
-import CenterMessage from "../components/CenterMessage";
-import { colors } from "../theme";
+import CenterMessage from "../../components/cities/CenterMessage";
+import { colors } from "../../theme";
 import Icon from 'react-native-vector-icons/AntDesign';
 
 import { connect } from "react-redux";
-import store from "../reducers/index" 
-import { addLocation, delLocation } from "../reducers/CitiesSlice";
+import store from "../../reducers/index"
+import { addLocation, delLocation } from "../../reducers/CitiesSlice";
 
 class City extends React.Component {
 
@@ -42,7 +42,7 @@ class City extends React.Component {
       name: this.state.name,
       info: this.state.info
     }
-    this.props.addLocation({location, city});
+    this.props.addLocation({ location, city });
     this.setState({ name: '', info: '' })
   }
 
@@ -78,12 +78,12 @@ class City extends React.Component {
               city.locations.map((location, index) => (
                 <View style={styles.locationContainer} key={index}>
                   <View style={{ width: '70%' }}>
-                    <Text numberOfLines={1} style={[styles.locationName, {color: this.props.darkMode ? colors.textLight : colors.black}]}>{location.name}</Text>
-                    <Text style={[styles.locationInfo, {color: this.props.darkMode ? colors.textDarkTranslucide : colors.blackTranslucide}]}>{location.info}</Text>
+                    <Text numberOfLines={1} style={[styles.locationName, { color: this.props.darkMode ? colors.textLight : colors.black }]}>{location.name}</Text>
+                    <Text style={[styles.locationInfo, { color: this.props.darkMode ? colors.textDarkTranslucide : colors.blackTranslucide }]}>{location.info}</Text>
                   </View>
                   <View style={{ alignSelf: 'center', flexDirection: 'row' }}>
                     <this.ButtonIcon name="sharealt" onPress={() => this.share(location)} />
-                    <this.ButtonIcon name="delete" onPress={() => this.props.delLocation({location, city})} />
+                    <this.ButtonIcon name="delete" onPress={() => this.props.delLocation({ location, city })} />
                   </View>
                 </View>
               ))
@@ -118,13 +118,13 @@ class City extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const city = state.cities.cities.find(city => city.id === ownProps.route.params.cityId)
-  return {city, darkMode: state.theme.darkMode}
-} 
+  return { city, darkMode: state.theme.darkMode }
+}
 
 const mapDispatchToProps = (dispatch) => ({
   addLocation: (payload) => dispatch(addLocation(payload)),
-  delLocation: (payload) => dispatch(delLocation(payload)) 
-}) 
+  delLocation: (payload) => dispatch(delLocation(payload))
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(City)
 

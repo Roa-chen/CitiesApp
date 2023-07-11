@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react';
 import { View, Alert } from 'react-native';
 import auth from '@react-native-firebase/auth';
-import CustomButton from '../../components/CustomButton';
+import CustomButton from '../../components/general/CustomButton';
 import { navigateToApp } from '../../navigation';
-import { createUserCloud } from '../../cloud';
+import { createUserCloud } from '../../services/firestore';
 
 export default WaitEmail = (props) => {
 
-  const {navigation} = props;
-  const {params} = props.route;
-  const {updateEmail} = params;
+  const { navigation } = props;
+  const { params } = props.route;
+  const { updateEmail } = params;
 
   useEffect(() => {
 
@@ -28,7 +28,7 @@ export default WaitEmail = (props) => {
         'Leave waiting screen?',
         'Quit this screen will stop the email verification process. Once verification is complete, you\'ll need to re-enter your information.',
         [
-          { text: "Don't leave", style: 'cancel', onPress: () => {} },
+          { text: "Don't leave", style: 'cancel', onPress: () => { } },
           {
             text: 'Leave',
             style: 'destructive',
@@ -48,7 +48,7 @@ export default WaitEmail = (props) => {
     if (!updateEmail) {
       auth().currentUser.sendEmailVerification().then(() => {
         const unsubscribe = auth().onUserChanged(() => {
-  
+
           const unsubscribeInterval = setInterval(() => {
             if (foundUser) {
               console.log('clear : ', unsubscribeInterval)
@@ -59,11 +59,11 @@ export default WaitEmail = (props) => {
           }, 10000);
           console.log("interval: ", unsubscribeInterval)
           if (auth().currentUser.emailVerified) {
-            
+
             console.log("clear: ", unsubscribeInterval)
             clearInterval(unsubscribeInterval);
-  
-            if (!foundUser){
+
+            if (!foundUser) {
               createUserCloud().then(() => {
                 foundUser = true;
                 clearInterval(unsubscribeInterval);
@@ -74,8 +74,8 @@ export default WaitEmail = (props) => {
             }
             return unsubscribe();
           }
-  
-  
+
+
         })
       });
     } else {
@@ -99,20 +99,20 @@ export default WaitEmail = (props) => {
 
   const handleDone = () => {
     auth().currentUser.reload().then(() => {
-        const user = auth().currentUser;
-        console.log(user)
-        if (user.emailVerified) {
-          navigateToApp()
-        }
+      const user = auth().currentUser;
+      console.log(user)
+      if (user.emailVerified) {
+        navigateToApp()
+      }
     })
-    
+
   }
 
-  return(
-    <View style={{flex: 1, alignItems: 'center'}}>
-      <View style={{width: '80%', alignItems: 'center'}}>
-        <CustomButton title="send again" onPress={sendAgain} style={{marginTop: 20}} />
-        <CustomButton title="done" onPress={handleDone} style={{marginTop: 20}} />
+  return (
+    <View style={{ flex: 1, alignItems: 'center' }}>
+      <View style={{ width: '80%', alignItems: 'center' }}>
+        <CustomButton title="send again" onPress={sendAgain} style={{ marginTop: 20 }} />
+        <CustomButton title="done" onPress={handleDone} style={{ marginTop: 20 }} />
       </View>
     </View>
   )

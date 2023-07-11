@@ -5,9 +5,9 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import {colors} from '../theme';
+import { colors } from '../../theme';
 
-const centerMessage = ({message}) => (
+const centerMessage = ({ message }) => (
   <View style={styles.emptyContainer}>
     <Text style={styles.message}>{message}</Text>
   </View>

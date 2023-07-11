@@ -6,12 +6,12 @@ import { useSelector } from "react-redux";
 import auth, { firebase } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
-import CustomButton from "../components/CustomButton";
-import CustomTextInput from "../components/CustomTextInput";
+import CustomButton from "../../components/general/CustomButton";
+import CustomTextInput from "../../components/general/CustomTextInput";
 
 import { DefaultTheme, DarkTheme } from "@react-navigation/native";
-import { colors } from "../theme";
-import { navigateToAuth, navigateToWaitEmail } from "../navigation";
+import { colors } from "../../theme";
+import { navigateToAuth, navigateToWaitEmail } from "../../navigation";
 
 const ButtonWidth = Dimensions.get("screen").width * 80 / 100
 

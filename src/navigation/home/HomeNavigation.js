@@ -1,24 +1,24 @@
 import React, { useEffect, useRef } from 'react';
 
-import {View, TouchableOpacity, Animated} from 'react-native';
+import { TouchableOpacity, Animated } from 'react-native';
 
-import Cities from './Cities/Cities';
-import City from './Cities/City';
-import AddCity from './AddCity/AddCity';
+import Cities from '../../screens/cities/Cities';
+import City from '../../screens/cities/City';
+import AddCity from '../../screens/cities/AddCity';
 
-import { colors } from './theme';
+import { colors } from '../../theme';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 
 import Icon from 'react-native-vector-icons/AntDesign';
-import ControlCenter from './ControlCenter/ControlCenter';
+import ControlCenter from '../../screens/parameters/ControlCenter';
 
 const Stack = createStackNavigator()
 
 const CitiesNav = (props) => {
   return (
     <Stack.Navigator screenOptions={{
-      headerStyle: {backgroundColor: colors.primary}, 
+      headerStyle: { backgroundColor: colors.primary },
       headerTintColor: 'white',
       headerTitleStyle: {
         color: 'white',
@@ -29,15 +29,15 @@ const CitiesNav = (props) => {
       gestureDirection: 'vertical',
       cardStyleInterpolator: CardStyleInterpolators.forModalPresentationIOS,
     }}>
-      <Stack.Screen 
-        name="Cities" 
-        component={Cities} 
-        initialParams={props.route.params} 
-        options={{title: 'Cities'}}
+      <Stack.Screen
+        name="Cities"
+        component={Cities}
+        initialParams={props.route.params}
+        options={{ title: 'Cities' }}
       />
-      <Stack.Screen 
-        name="City" 
-        component={City} 
+      <Stack.Screen
+        name="City"
+        component={City}
         initialParams={props.route.params} />
     </Stack.Navigator>
   )
@@ -47,8 +47,8 @@ const Tab = createBottomTabNavigator();
 
 const TabButton = (props) => {
 
-  const {name, onPress, accessibilityState} = props;
-  const {selected} = accessibilityState;
+  const { name, onPress, accessibilityState } = props;
+  const { selected } = accessibilityState;
   const scaleValue = useRef(new Animated.Value(selected ? 1 : 0))
 
   useEffect(() => {
@@ -60,16 +60,16 @@ const TabButton = (props) => {
   }, [selected])
 
   return (
-    <TouchableOpacity onPress={onPress} style={{flex: 1, justifyContent: 'center', alignItems: 'center'}} >
-      <Icon name={name} style={{paddingBottom: 5}} size={30} color={selected ? colors.primary : '#666'} />
-      <Animated.View style={{alignSelf: 'center', width: '10%', height: 6, backgroundColor: colors.primary, borderRadius: 3, backgroundColor: selected ? colors.primary : '#666', transform: [{scale: scaleValue.current}]}} />
+    <TouchableOpacity onPress={onPress} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} >
+      <Icon name={name} style={{ paddingBottom: 5 }} size={30} color={selected ? colors.primary : '#666'} />
+      <Animated.View style={{ alignSelf: 'center', width: '10%', height: 6, backgroundColor: colors.primary, borderRadius: 3, backgroundColor: selected ? colors.primary : '#666', transform: [{ scale: scaleValue.current }] }} />
     </TouchableOpacity>
   )
 }
 
-const Tabs = props => {
+export default HomeNavigation = props => {
   return (
-    <Tab.Navigator 
+    <Tab.Navigator
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
@@ -81,13 +81,14 @@ const Tabs = props => {
         },
       }} >
       <Tab.Screen name="Cities List" component={CitiesNav} options={{
-          tabBarButton: (props) => <TabButton {...props} name="home" /> }} />
+        tabBarButton: (props) => <TabButton {...props} name="home" />
+      }} />
       <Tab.Screen name="AddCity" component={AddCity} options={{
-          tabBarButton: (props) => <TabButton {...props} name="plus" /> }} />
+        tabBarButton: (props) => <TabButton {...props} name="plus" />
+      }} />
       <Tab.Screen name="ControlCenter" component={ControlCenter} options={{
-          tabBarButton: (props) => <TabButton {...props} name="setting" /> }} />
+        tabBarButton: (props) => <TabButton {...props} name="setting" />
+      }} />
     </Tab.Navigator>
   )
 }
-
-export default Tabs;
