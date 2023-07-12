@@ -81,7 +81,7 @@ class Cities extends React.Component {
                     <View style={{ alignSelf: 'center' }}>
                       <TouchableWithoutFeedback onPress={() => this.props.delCity(item)}>
                         <View style={{ padding: 10 }}>
-                          <Image source={require("./cancel-button.png")} style={styles.image} />
+                          <Image source={require("../../res/images/cancel-button.png")} style={styles.image} />
                         </View>
                       </TouchableWithoutFeedback>
                     </View>

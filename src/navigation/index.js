@@ -1,6 +1,5 @@
 import React from "react";
-
-export const navigationRef = React.createRef()
+import { navigationRef } from "./main/MainNavigation";
 
 export const navigateToApp = () => {
   navigationRef.current.resetRoot({

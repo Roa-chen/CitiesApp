@@ -4,6 +4,7 @@ import { CardStyleInterpolators, createStackNavigator } from "@react-navigation/
 
 import SelectAuth from "../../screens/auth/SelectAuth";
 import SignIn from "../../screens/auth/SignIn";
+import WaitEmail from "../../screens/auth/WaitEmail";
 
 export default AuthNavigation = () => {
 

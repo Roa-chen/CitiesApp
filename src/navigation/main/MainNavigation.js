@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { View, Text, DevSettings } from "react-native";
 
 import { NavigationContainer } from '@react-navigation/native';
@@ -12,8 +12,13 @@ import HomeNavigation from "../home/HomeNavigation";
 import AuthNavigation from "../auth/AuthNavigation";
 
 
+const Navigator = React.forwardRef((_, ref) => {
 
-export default MainNavigation = () => {
+  const navigationRef = useRef(null);
+
+  React.useImperativeHandle(ref, () => {
+    navigationRef: navigationRef.current
+  })
 
   const [initialize, setInitialize] = useState(true);
   const [user, setUser] = useState(null);
@@ -41,8 +46,6 @@ export default MainNavigation = () => {
       subscriber();
     };
   }, []);
-
-
   
   const StackRoot = createStackNavigator();
 
@@ -56,10 +59,21 @@ export default MainNavigation = () => {
 
   return (
     <NavigationContainer>
-      <StackRoot.Navigator initialRouteName={(user && user.emailVerified) ? 'App' : 'Authentification'} screenOptions={{ headerShown: false }}>
+      <StackRoot.Navigator ref={navigationRef} initialRouteName={(user && user.emailVerified) ? 'App' : 'Authentification'} screenOptions={{ headerShown: false }}>
         <StackRoot.Screen name="App" component={HomeNavigation} />
         <StackRoot.Screen name="Authentification" component={AuthNavigation} initialParams={{ move: this.resetRootFunc }} />
       </StackRoot.Navigator>
     </NavigationContainer>
+  )
+})
+
+export let navigationRef = null 
+
+export default MainNavigator = () => {
+
+  navigationRef = useRef(null);
+
+  return(
+    <Navigator ref={navigationRef} />
   )
 }
