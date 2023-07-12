@@ -1,33 +1,33 @@
 import React from "react";
-import { navigationRef } from "./main/MainNavigation";
+import { navRef } from "./main/MainNavigation";
 
 export const navigateToApp = () => {
-  navigationRef.current.resetRoot({
-    index: 0,
-    routes: [{ name: "App", state: { routes: [{ name: "Cities List" }] } }]
+  navRef.current.reset({
+    routes: [{name: "App"}]
   })
 }
 
 export const navigateToAuth = () => {
-  navigationRef.current.resetRoot({
-    index: 0,
-    routes: [{ name: "Authentification" }]
+  navRef.current.reset({
+    routes: [{name: "Authentification"}]
   })
 }
 
 export const navigateToWaitEmail = (params) => {
-
-
-
-  navigationRef.current.resetRoot({
+  navRef.current.reset({
     index: 1,
     routes: [{ name: "Authentification" }, { name: "Authentification", state: { routes: [{ name: "WaitEmail", params: { updateEmail: false, ...params } }] } }]
   })
 }
 
 export const isInAuth = () => {
-  if (navigationRef.current?.getState()) {
-    return (navigationRef.current?.getState().routes[0].name === "Authentification")
+  if (navRef.current?.getState()) {
+    console.log("in home: ", navRef.current?.getState().routes[0].name === "Authentification")
+    return (navRef.current?.getState().routes[0].name === "Authentification")
   }
   return false;
+
+  // console.log('isInAuth navigation getState() : ', navigation.getState())
+
+  // return true;
 }

@@ -58,7 +58,7 @@ export default ControlCenter = ({ navigation }) => {
 
   const logOut = () => {
     auth().signOut();
-    navigateToAuth()
+    navigateToAuth();
   }
 
   const emailPaddingValue = useRef(new Animated.Value(10)).current;

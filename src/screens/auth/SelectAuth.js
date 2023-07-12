@@ -9,9 +9,7 @@ import auth from '@react-native-firebase/auth';
 import LinearGradient from "react-native-linear-gradient";
 import { isInAuth, navigateToApp, navigateToWaitEmail } from "../../navigation";
 
-export default LogIn = (props) => {
-
-  const { navigation, routes } = props;
+export default LogIn = ({ navigation }) => {
 
   const [emailText, setEmailText] = useState("");
   const [passwordText, setPasswordText] = useState("");
@@ -34,6 +32,7 @@ export default LogIn = (props) => {
             setEmailText('')
             setPasswordText('')
             navigateToApp()
+
           } else {
             navigateToWaitEmail()
           }

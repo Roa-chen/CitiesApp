@@ -11,14 +11,11 @@ import { navigateToAuth, isInAuth } from "..";
 import HomeNavigation from "../home/HomeNavigation";
 import AuthNavigation from "../auth/AuthNavigation";
 
+export let navRef;
 
-const Navigator = React.forwardRef((_, ref) => {
+export default MainNavigator = () => {
 
-  const navigationRef = useRef(null);
-
-  React.useImperativeHandle(ref, () => {
-    navigationRef: navigationRef.current
-  })
+  navRef = useRef(null);
 
   const [initialize, setInitialize] = useState(true);
   const [user, setUser] = useState(null);
@@ -58,22 +55,11 @@ const Navigator = React.forwardRef((_, ref) => {
   }
 
   return (
-    <NavigationContainer>
-      <StackRoot.Navigator ref={navigationRef} initialRouteName={(user && user.emailVerified) ? 'App' : 'Authentification'} screenOptions={{ headerShown: false }}>
+    <NavigationContainer ref={navRef}>
+      <StackRoot.Navigator initialRouteName={(user && user.emailVerified) ? 'App' : 'Authentification'} screenOptions={{ headerShown: false }}>
         <StackRoot.Screen name="App" component={HomeNavigation} />
         <StackRoot.Screen name="Authentification" component={AuthNavigation} initialParams={{ move: this.resetRootFunc }} />
       </StackRoot.Navigator>
     </NavigationContainer>
-  )
-})
-
-export let navigationRef = null 
-
-export default MainNavigator = () => {
-
-  navigationRef = useRef(null);
-
-  return(
-    <Navigator ref={navigationRef} />
   )
 }
