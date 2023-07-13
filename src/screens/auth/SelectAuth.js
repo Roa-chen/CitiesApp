@@ -7,12 +7,14 @@ import { colors } from "../../theme";
 
 import auth from '@react-native-firebase/auth';
 import LinearGradient from "react-native-linear-gradient";
-import { isInAuth, navigateToApp, navigateToWaitEmail } from "../../navigation";
+import { navigateToApp, navigateToWaitEmail } from "../../navigation";
+
+import AsyncStorage from "@react-native-async-storage/async-storage"; //TODO delete this line and button Reset Carousel
 
 export default LogIn = ({ navigation }) => {
 
-  const [emailText, setEmailText] = useState("arsenechardon14@gmail.com");
-  const [passwordText, setPasswordText] = useState("password");
+  const [emailText, setEmailText] = useState(__DEV__ ? "arsenechardon14@gmail.com" : '');
+  const [passwordText, setPasswordText] = useState(__DEV__ ? "password" : '');
 
   const [isLoading, setLoading] = useState(false)
 
@@ -61,6 +63,7 @@ export default LogIn = ({ navigation }) => {
           <LinearGradient colors={['#ffffff00', colors.textLight]} style={styles.gradient} start={{ x: .5, y: .5 }} end={{ x: 0, y: 0.5 }} />
         </View>
         <CustomButton title="Sign In" onPress={singIn} style={{ marginTop: 20 }} />
+        <CustomButton title="Reset Carousel" onPress={() => AsyncStorage.setItem('hasLaunched', JSON.stringify(false))} style={{ marginTop: 20 }} />
       </View>
     </View>
   )

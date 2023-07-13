@@ -7,9 +7,9 @@ export const navigateToApp = () => {
   })
 }
 
-export const navigateToAuth = () => {
+export const navigateToAuth = (previousScreen) => {
   navRef.current.reset({
-    routes: [{name: "Authentification", params: {fromApp: (navRef.current.getState().routes.find(item => item.name==='App') !== undefined)}}]
+    routes: [{name: "Authentification", params: {fromApp: (navRef.current.getState()?.routes.find(item => item.name==='App') !== undefined), fromCarousel: (previousScreen==='Carousel')}}]
   })
 }
 
@@ -25,8 +25,4 @@ export const isInAuth = () => {
     return (navRef.current?.getState().routes[0].name === "Authentification")
   }
   return false;
-
-  // console.log('isInAuth navigation getState() : ', navigation.getState())
-
-  // return true;
 }
