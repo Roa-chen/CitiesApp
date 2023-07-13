@@ -9,7 +9,7 @@ export const navigateToApp = () => {
 
 export const navigateToAuth = () => {
   navRef.current.reset({
-    routes: [{name: "Authentification"}]
+    routes: [{name: "Authentification", params: {fromApp: (navRef.current.getState().routes.find(item => item.name==='App') !== undefined)}}]
   })
 }
 
@@ -22,7 +22,6 @@ export const navigateToWaitEmail = (params) => {
 
 export const isInAuth = () => {
   if (navRef.current?.getState()) {
-    console.log("in home: ", navRef.current?.getState().routes[0].name === "Authentification")
     return (navRef.current?.getState().routes[0].name === "Authentification")
   }
   return false;

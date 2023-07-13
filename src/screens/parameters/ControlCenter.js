@@ -14,6 +14,7 @@ import { colors } from "../../theme";
 import { navigateToAuth, navigateToWaitEmail } from "../../navigation";
 import ExpandableButton from "../../components/controlCenter/ExpandableButton";
 import useUser from "../../hooks/auth/useUser";
+import { logOut } from "../../services/auth";
 
 export default ControlCenter = ({ navigation }) => {
 
@@ -51,11 +52,6 @@ export default ControlCenter = ({ navigation }) => {
   const [emailText, setEmailText] = useState('');
   const [passwordText, setPasswordText] = useState('');
   const [emailLoading, setEmailLoading] = useState(false)
-
-  const logOut = () => {
-    auth().signOut();
-    navigateToAuth();
-  }
 
   const reauthenticate = (password) => {
     // const user = auth().currentUser
@@ -118,7 +114,7 @@ export default ControlCenter = ({ navigation }) => {
   }
 
   const [showDisplayName, setShowDisplayName] = useState(false);
-  const [displayName, setDisplayName] = useState('test');
+  const [displayName, setDisplayName] = useState('');
   const [displayNameLoading, setDisplayNameLoading] = useState(false);
 
   const updateDisplayName = () => {
@@ -142,13 +138,14 @@ export default ControlCenter = ({ navigation }) => {
     <ScrollView contentContainerStyle={styles.container} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
       <View style={{ width: '80%', alignItems: 'center' }}>
         {/* Log out Part */}
-        <CustomButton title="Log Out" onPress={logOut} style={{ marginTop: 20 }} />
+        <CustomButton title="Log Out" onPress={() => logOut(true)} style={{ marginTop: 20 }} />
         {/* Info Text */}
-        <Text style={styles.displayText} >Email : {"\n"}{user.email}</Text>
-        <Text style={styles.displayText} >Name : {"\n"}{user.displayName}</Text>
+        <Text style={styles.displayText} >Email : {"\n"}{user?.email}</Text>
+        <Text style={styles.displayText} >Name : {"\n"}{user?.displayName}</Text>
         {/* Change Email Part */}
 
         <ExpandableButton
+          style={{marginTop: 20}}
           headerName={'Change Email'} 
           expanded={showEmail}
           setExpanded={setShowEmail}
@@ -167,11 +164,9 @@ export default ControlCenter = ({ navigation }) => {
 
           loading={emailLoading}
         />
-
-        {/* Delete Account Part */}
-        <CustomButton title="Delete Account" onPress={deleteAccount} style={{ marginTop: 20 }} />
         {/* Change Display Name Part */}
         <ExpandableButton
+          style={{marginTop: 20}}
           headerName={'Change Name'} 
           expanded={showDisplayName}
           setExpanded={setShowDisplayName}
@@ -185,6 +180,8 @@ export default ControlCenter = ({ navigation }) => {
           firstInputValue={displayName} 
           firstInputOnChange={setDisplayName}
         />
+        {/* Delete Account Part */}
+        <CustomButton title="Delete Account" onPress={deleteAccount} style={{ marginTop: 30 }} />
       </View>
     </ScrollView>
   )
@@ -194,14 +191,6 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     paddingBottom: 40,
-  },
-  detailContainer: {
-    marginTop: 20,
-    backgroundColor: DefaultTheme.colors.background,
-    padding: 10,
-    alignItems: 'center',
-    elevation: 20,
-    borderRadius: 10,
   },
   displayText: {
     color: colors.textLight,

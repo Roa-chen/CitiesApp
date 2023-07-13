@@ -9,9 +9,9 @@ import { useSelector } from "react-redux";
 
 
 
-export default ExpandableButton = ({headerName, expanded=null, setExpanded, buttonText, buttonOnPress, firstInputPlaceholder, firstInputMode="text", firstInputValue, firstInputOnChange, firstInputSecureTextEntry, secondInputPlaceholder, secondInputMode="text",secondtInputValue, secondInputOnChange, secondInputSecureTextEntry, loading }) => {
+export default ExpandableButton = ({style, headerName, expanded=null, setExpanded, buttonText, buttonOnPress, buttonStyle, firstInputPlaceholder, firstInputMode="text", firstInputValue, firstInputOnChange, firstInputSecureTextEntry, secondInputPlaceholder, secondInputMode="text",secondtInputValue, secondInputOnChange, secondInputSecureTextEntry, loading }) => {
 
-  const secondInput = ((secondInputOnChange || secondInputMode || secondInputPlaceholder || secondInputSecureTextEntry || secondtInputValue) ? true : false)
+  const secondInput = (secondInputOnChange || secondInputPlaceholder || secondInputSecureTextEntry || secondtInputValue)
 
   const darkMode = useSelector((state) => state.theme.darkMode)
   const ButtonWidth = Dimensions.get("screen").width * 80 / 100
@@ -29,7 +29,7 @@ export default ExpandableButton = ({headerName, expanded=null, setExpanded, butt
   const paddingValue = useRef(new Animated.Value(10)).current;
   const elevationValue = paddingValue.interpolate({
     inputRange: [10, secondInput ? 150 : 80],
-    outputRange: [0, 20],
+    outputRange: [0, 10],
   })
   const firstInputPosition = paddingValue.interpolate({
     inputRange: [10, secondInput ? 150 : 80],
@@ -49,8 +49,8 @@ export default ExpandableButton = ({headerName, expanded=null, setExpanded, butt
   }
 
   return (
-    <Animated.View style={[styles.detailContainer, { paddingBottom: paddingValue, elevation: elevationValue, backgroundColor: (darkMode ? DarkTheme : DefaultTheme).colors.background }]}>
-      <CustomButton title={headerName} onPress={() => {if (expanded !== null) {setExpanded(expanded => !expanded)} else {setIsExpanded(expanded => !expanded)}}} style={{ width: ButtonWidth, zIndex: 2 }} isLoading={(!secondInput) ? loading : false} />
+    <Animated.View style={[styles.detailContainer, { paddingBottom: paddingValue, elevation: elevationValue, backgroundColor: (darkMode ? DarkTheme : DefaultTheme).colors.background }, style]}>
+      <CustomButton title={headerName} onPress={() => {if (expanded !== null) {setExpanded(expanded => !expanded)} else {setIsExpanded(expanded => !expanded)}}} style={[{ width: ButtonWidth, zIndex: 2 }, buttonStyle]} isLoading={(!secondInput) ? loading : false} />
       <Animated.View style={{ width: ButtonWidth, position: 'absolute', top: firstInputPosition, flexDirection: "row", justifyContent: 'space-between' }}>
         <CustomTextInput text={firstInputPlaceholder} style={{ width: '70%' }} inputMode={firstInputMode} value={firstInputValue} onChange={firstInputOnChange} secureTextEntry={firstInputSecureTextEntry} />
         <CustomButton title={buttonText} style={{ width: '25%' }} onPress={buttonOnPress} />
@@ -69,19 +69,10 @@ export default ExpandableButton = ({headerName, expanded=null, setExpanded, butt
 
 const styles = StyleSheet.create({
   detailContainer: {
-    marginTop: 20,
     backgroundColor: DefaultTheme.colors.background,
     padding: 10,
     alignItems: 'center',
     elevation: 20,
     borderRadius: 10,
   },
-  displayText: {
-    color: colors.textLight,
-    alignSelf: "flex-start",
-    fontSize: 20,
-    marginTop: 20,
-    fontWeight: 'bold',
-  }
-
 })

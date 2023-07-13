@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { View, Text, DevSettings } from "react-native";
 
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from "@react-navigation/stack";
+import { CardStyleInterpolators, createStackNavigator } from "@react-navigation/stack";
 
 import auth from '@react-native-firebase/auth';
 
@@ -23,7 +23,7 @@ export default MainNavigator = () => {
   onAuthStateChange = (user) => {
     setInitialize(false);
     setUser(user);
-    if (!user && !isInAuth()) navigateToAuth();
+    if (!initialize && !isInAuth() && !user) navigateToAuth();
   }
 
   useEffect(() => {
@@ -56,9 +56,14 @@ export default MainNavigator = () => {
 
   return (
     <NavigationContainer ref={navRef}>
-      <StackRoot.Navigator initialRouteName={(user && user.emailVerified) ? 'App' : 'Authentification'} screenOptions={{ headerShown: false }}>
-        <StackRoot.Screen name="App" component={HomeNavigation} />
-        <StackRoot.Screen name="Authentification" component={AuthNavigation} initialParams={{ move: this.resetRootFunc }} />
+      <StackRoot.Navigator initialRouteName={(user && user.emailVerified) ? 'App' : 'Authentification'} screenOptions={{
+        headerShown: false,
+        // cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+      }}>
+        <StackRoot.Screen name="App" component={HomeNavigation} options={{cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS}} />
+        <StackRoot.Screen name="Authentification" component={AuthNavigation} options={(navigation) => {
+          if (navigation.route.params?.fromApp) return {cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS}
+        }}/>
       </StackRoot.Navigator>
     </NavigationContainer>
   )
