@@ -18,7 +18,7 @@ export default MainNavigator = () => {
   navRef = useRef(null);
 
   const [initialize, setInitialize] = useState(true);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(auth().currentUser);
 
   onAuthStateChange = (user) => {
     setInitialize(false);

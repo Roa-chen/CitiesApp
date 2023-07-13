@@ -11,8 +11,8 @@ import { isInAuth, navigateToApp, navigateToWaitEmail } from "../../navigation";
 
 export default LogIn = ({ navigation }) => {
 
-  const [emailText, setEmailText] = useState("");
-  const [passwordText, setPasswordText] = useState("");
+  const [emailText, setEmailText] = useState("arsenechardon14@gmail.com");
+  const [passwordText, setPasswordText] = useState("password");
 
   const [isLoading, setLoading] = useState(false)
 

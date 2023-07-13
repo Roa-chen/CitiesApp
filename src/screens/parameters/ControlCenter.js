@@ -12,14 +12,12 @@ import CustomTextInput from "../../components/general/CustomTextInput";
 import { DefaultTheme, DarkTheme } from "@react-navigation/native";
 import { colors } from "../../theme";
 import { navigateToAuth, navigateToWaitEmail } from "../../navigation";
-
-const ButtonWidth = Dimensions.get("screen").width * 80 / 100
+import ExpandableButton from "../../components/controlCenter/ExpandableButton";
+import useUser from "../../hooks/auth/useUser";
 
 export default ControlCenter = ({ navigation }) => {
 
   const darkMode = useSelector((state) => state.theme.darkMode)
-
-
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -29,16 +27,14 @@ export default ControlCenter = ({ navigation }) => {
       }
     })
 
-    const unsubscribeUser = auth().onUserChanged((user) => {
-      console.log('changed')
-    })
     return () => {
       unsubscribe();
-      unsubscribeUser();
     }
   }, [])
 
   const [refreshing, setRefreshing] = useState(false);
+
+  const user = useUser();
 
   const onRefresh = () => {
     console.log(auth().currentUser)
@@ -61,31 +57,8 @@ export default ControlCenter = ({ navigation }) => {
     navigateToAuth();
   }
 
-  const emailPaddingValue = useRef(new Animated.Value(10)).current;
-  const emailElevationValue = emailPaddingValue.interpolate({
-    inputRange: [10, 150],
-    outputRange: [0, 20]
-  })
-  const emailEntryPosition = emailPaddingValue.interpolate({
-    inputRange: [10, 150],
-    outputRange: [10, 80]
-  })
-  const passwordEntryPosition = emailPaddingValue.interpolate({
-    inputRange: [10, 150],
-    outputRange: [10, 150]
-  })
-
-  const emailAnimationOpen = () => {
-    Animated.timing(emailPaddingValue, { toValue: 150, duration: 100, useNativeDriver: false }).start()
-    setShowEmail(!showEmail)
-  }
-  const emailAnimationClose = () => {
-    Animated.timing(emailPaddingValue, { toValue: 10, duration: 100, useNativeDriver: false }).start()
-    setShowEmail(!showEmail)
-  }
-
   const reauthenticate = (password) => {
-    const user = auth().currentUser
+    // const user = auth().currentUser
     const cred = firebase.auth.EmailAuthProvider.credential(user.email, password);
     return user.reauthenticateWithCredential(cred);
   }
@@ -145,36 +118,23 @@ export default ControlCenter = ({ navigation }) => {
   }
 
   const [showDisplayName, setShowDisplayName] = useState(false);
-  const [displayName, setDisplayName] = useState('');
-
-  const displayNamePaddingValue = useRef(new Animated.Value(10)).current;
-  const displayNameElevationValue = displayNamePaddingValue.interpolate({
-    inputRange: [10, 150],
-    outputRange: [0, 20]
-  })
-  // const displayNameEntryPosition = displayNamePaddingValue.interpolate({
-  //   inputRange: [10, 150],
-  //   outputRange: [10, 80]
-  // })
-
-  const displayNameAnimationOpen = () => {
-    Animated.timing(displayNamePaddingValue, { toValue: 80, duration: 100, useNativeDriver: false }).start()
-    setShowDisplayName(!showDisplayName)
-  }
-  const displayNameAnimationClose = () => {
-    Animated.timing(displayNamePaddingValue, { toValue: 10, duration: 100, useNativeDriver: false }).start()
-    setShowDisplayName(!showDisplayName)
-  }
-
+  const [displayName, setDisplayName] = useState('test');
+  const [displayNameLoading, setDisplayNameLoading] = useState(false);
 
   const updateDisplayName = () => {
+    setDisplayNameLoading(true);
     auth().currentUser.updateProfile({ displayName: displayName })
+      .then(() => {
+        setDisplayNameLoading(false)
+      })
       .catch(
         err => {
-          Alert.alert('Error', err)
+          console.log('err: ', err)
+          Alert.alert('Error', err.code)
+          setDisplayNameLoading(false)
         }
       );
-    displayNameAnimationClose();
+    setShowDisplayName(false);
     setDisplayName('');
   }
 
@@ -184,32 +144,47 @@ export default ControlCenter = ({ navigation }) => {
         {/* Log out Part */}
         <CustomButton title="Log Out" onPress={logOut} style={{ marginTop: 20 }} />
         {/* Info Text */}
-        <Text style={styles.displayText} >Email : {"\n"}{auth().currentUser.email}</Text>
-        <Text style={styles.displayText} >Name : {"\n"}{auth().currentUser.displayName}</Text>
+        <Text style={styles.displayText} >Email : {"\n"}{user.email}</Text>
+        <Text style={styles.displayText} >Name : {"\n"}{user.displayName}</Text>
         {/* Change Email Part */}
-        <Animated.View style={[styles.detailContainer, { paddingBottom: emailPaddingValue, elevation: emailElevationValue, backgroundColor: (darkMode ? DarkTheme : DefaultTheme).colors.background }]}>
-          <CustomButton title="Change Email" onPress={!showEmail ? emailAnimationOpen : emailAnimationClose} style={{ width: ButtonWidth, zIndex: 2 }} />
-          <Animated.View style={{ width: ButtonWidth, position: 'absolute', top: emailEntryPosition, flexDirection: "row", justifyContent: 'space-between' }}>
-            <CustomTextInput text="new Email..." style={{ width: '70%' }} inputMode="email" value={emailText} onChange={setEmailText} />
-            <CustomButton title="change" style={{ width: '25%' }} onPress={handleEmailChange} />
-          </Animated.View>
-          <Animated.View style={{ width: ButtonWidth, position: 'absolute', top: passwordEntryPosition, flexDirection: "row", justifyContent: 'space-between' }}>
-            <CustomTextInput text="your password..." secureTextEntry style={{ width: '70%' }} inputMode="none" value={passwordText} onChange={setPasswordText} />
-            <View style={{ width: '25%', justifyContent: 'center', alignItems: 'center' }}>
-              {emailLoading && <ActivityIndicator size={'large'} />}
-            </View>
-          </Animated.View>
-        </Animated.View>
+
+        <ExpandableButton
+          headerName={'Change Email'} 
+          expanded={showEmail}
+          setExpanded={setShowEmail}
+
+          buttonText={'Change'}
+          buttonOnPress={handleEmailChange}
+
+          firstInputPlaceholder={"new Email..."} 
+          firstInputValue={emailText} 
+          firstInputOnChange={setEmailText}
+
+          secondInputPlaceholder={"Password..."}
+          secondtInputValue={passwordText}
+          secondInputOnChange={setPasswordText}
+          secondInputSecureTextEntry
+
+          loading={emailLoading}
+        />
+
         {/* Delete Account Part */}
         <CustomButton title="Delete Account" onPress={deleteAccount} style={{ marginTop: 20 }} />
         {/* Change Display Name Part */}
-        <Animated.View style={[styles.detailContainer, { paddingBottom: displayNamePaddingValue, elevation: displayNameElevationValue, backgroundColor: (darkMode ? DarkTheme : DefaultTheme).colors.background }]}>
-          <CustomButton title="Change Name" onPress={!showDisplayName ? displayNameAnimationOpen : displayNameAnimationClose} style={{ width: ButtonWidth, zIndex: 2 }} />
-          <Animated.View style={{ width: ButtonWidth, position: 'absolute', top: displayNamePaddingValue, flexDirection: "row", justifyContent: 'space-between' }}>
-            <CustomTextInput text="new Name..." style={{ width: '70%' }} inputMode="text" value={displayName} onChange={setDisplayName} />
-            <CustomButton title="change" style={{ width: '25%' }} onPress={updateDisplayName} />
-          </Animated.View>
-        </Animated.View>
+        <ExpandableButton
+          headerName={'Change Name'} 
+          expanded={showDisplayName}
+          setExpanded={setShowDisplayName}
+
+          loading={displayNameLoading}
+
+          buttonText={'Change'}
+          buttonOnPress={updateDisplayName}
+
+          firstInputPlaceholder={"new Name..."} 
+          firstInputValue={displayName} 
+          firstInputOnChange={setDisplayName}
+        />
       </View>
     </ScrollView>
   )
